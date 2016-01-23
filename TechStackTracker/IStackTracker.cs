@@ -6,6 +6,6 @@ namespace TechStackTracker
     {
         string Name { get;  }
         string Description { get; }
-        List<StackReport> Run();
+        StackReport Run();
     }
 }

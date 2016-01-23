@@ -8,9 +8,9 @@ namespace TechStackTracker.Sinks
 {
     public class CsvStackReportSink : IStackReportSink
     {
-        private readonly List<StackReport> _reports;
+        private readonly List<StackItem> _reports;
 
-        public CsvStackReportSink(List<StackReport> reports)
+        public CsvStackReportSink(List<StackItem> reports)
         {
             _reports = reports;
         }

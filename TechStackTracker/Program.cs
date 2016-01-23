@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TechStackTracker.Sinks;
@@ -17,7 +18,20 @@ namespace TechStackTracker
             var vsTracker = new VisualStudioStackTracker(_workingDirectory);
             var stackReport = vsTracker.Run();
 
-            var stackSink = new CsvStackReportSink(stackReport);
+            if (stackReport.Errors.ToList().Any())
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine();
+                Console.WriteLine("Unknown files found: {0}", stackReport.Errors.Count());
+                stackReport.Errors.ForEach(f =>
+                {
+                    Console.WriteLine("\\t{0}", f);
+                });
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+
+
+            var stackSink = new CsvStackReportSink(stackReport.Results);
             stackSink.Flush();
 
             Console.Read();

@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace TechStackTracker.Sinks
+﻿namespace TechStackTracker
 {
     interface IStackReportSink
     {

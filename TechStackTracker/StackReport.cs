@@ -1,11 +1,10 @@
-﻿namespace TechStackTracker
+﻿using System.Collections.Generic;
+
+namespace TechStackTracker
 {
     public class StackReport
     {
-        public string TechnologyName { get; set; }
-        public string VersionUsed { get; set; }
-        public string SolutionName { get; set; }
-        public string SolutionLocation{ get; set; }
-        public string Parser { get; set; }
+        public List<StackItem> Results { get; set; }
+        public List<string> Errors { get; set; }
     }
 }

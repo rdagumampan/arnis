@@ -32,39 +32,33 @@ namespace TechStackTracker.Trackers
         public string Name { get;} = "VisualStudio";
         public string Description { get; } = "Track all projects that used Microsoft Visual Studio IDE.";
 
-        public List<StackReport> Run()
+        public StackReport Run()
         {
-            var report = new List<StackReport>();
+            var results = new List<StackItem>();
             var files = Directory.EnumerateFiles(_workingDirectory, "*.sln", SearchOption.AllDirectories).ToList();
 
-            //track all with latest versions from 2014
+            //tracks all with latest versions from 2014
             var stage1TrackedFiles = TrackWithVisualStudioVersion(files);
-            report.AddRange(stage1TrackedFiles);
+            results.AddRange(stage1TrackedFiles);
 
-            //track all that were skipped in stage 1
-            var skippedStaged1 = files.Where(f => !report.Exists(r => r.SolutionLocation == f)).ToList();
+            //tracks all that were skipped in stage 1
+            var skippedStaged1 = files.Where(f => !results.Exists(r => r.SolutionLocation == f)).ToList();
             var stage2TrackedFiles = TrackWithSolutionFormat(skippedStaged1);
-            report.AddRange(stage2TrackedFiles);
+            results.AddRange(stage2TrackedFiles);
 
-            //track all that were skipped in stage 2
-            var skippedStaged2 = files.Where(f => !report.Exists(r => r.SolutionLocation == f)).ToList();
+            //tracks all that were skipped in stage 2
+            var skippedStaged2 = files.Where(f => !results.Exists(r => r.SolutionLocation == f)).ToList();
             var stage3TrackedFiles = TrackWithMsBuild(skippedStaged2);
-            report.AddRange(stage3TrackedFiles);
+            results.AddRange(stage3TrackedFiles);
 
             //record all skipped files
-            var rejectedFiles = files.Where(f => !report.Exists(r => r.SolutionLocation == f)).ToList();
-            if (rejectedFiles.Any())
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Unknown files: ", rejectedFiles.Count());
-                rejectedFiles.ForEach(f =>
-                {
-                    Console.WriteLine("\\t{0}", f);
-                });
-                Console.ForegroundColor = ConsoleColor.White;
-            }
+            var skippedStage3 = files.Where(f => !results.Exists(r => r.SolutionLocation == f)).ToList();
 
-            return report;
+            return new StackReport
+            {
+                Results = results,
+                Errors = skippedStage3
+            };
         }
 
         private List<VsMapping> GetVsMapping()
@@ -84,9 +78,9 @@ namespace TechStackTracker.Trackers
             return vsMapping;
         }
 
-        private List<StackReport> TrackWithVisualStudioVersion(List<string> files)
+        private List<StackItem> TrackWithVisualStudioVersion(List<string> files)
         {
-            List<StackReport> report = new List<StackReport>();
+            List<StackItem> report = new List<StackItem>();
 
             files.ForEach(f =>
             {
@@ -98,7 +92,7 @@ namespace TechStackTracker.Trackers
                     var regex = new Regex($"(\\W|^)VisualStudioVersion\\s=\\s{v.VsVersion}");
                     if (regex.IsMatch(contents))
                     {
-                        report.Add(new StackReport
+                        report.Add(new StackItem
                         {
                             TechnologyName = Name,
                             VersionUsed = v.Name,
@@ -113,9 +107,9 @@ namespace TechStackTracker.Trackers
             return report;
         }
 
-        private List<StackReport> TrackWithSolutionFormat(List<string> files)
+        private List<StackItem> TrackWithSolutionFormat(List<string> files)
         {
-            List<StackReport> report = new List<StackReport>();
+            List<StackItem> report = new List<StackItem>();
 
             files.ForEach(f =>
             {
@@ -124,10 +118,10 @@ namespace TechStackTracker.Trackers
                 var versionMappings = GetVsMapping();
                 versionMappings.ForEach(v =>
                 {
-                    var regex = new Regex($"(\\W |^)Microsoft\\sVisual\\sStudio\\sSolution\\sFile,\\sFormat\\sVersion\\s{v.VsSlnFileFormatVersion}");
+                    var regex = new Regex($"(\\W |^)Microsoft\\sVisual\\sStudio\\sSolution\\sFile,\\sFormat\\sVersion\\s{v.VsSlnFileFormatVersion}",RegexOptions.Multiline);
                     if (regex.IsMatch(contents))
                     {
-                        report.Add(new StackReport
+                        report.Add(new StackItem
                         {
                             TechnologyName = Name,
                             VersionUsed = v.Name,
@@ -142,9 +136,9 @@ namespace TechStackTracker.Trackers
             return report;
         }
 
-        private List<StackReport> TrackWithMsBuild(List<string> files)
+        private List<StackItem> TrackWithMsBuild(List<string> files)
         {
-            List<StackReport> report = new List<StackReport>();
+            List<StackItem> report = new List<StackItem>();
 
             files.ForEach(f =>
             {
@@ -174,7 +168,7 @@ namespace TechStackTracker.Trackers
 
                 if(null != versionInfo)
                 {
-                    report.Add(new StackReport
+                    report.Add(new StackItem
                     {
                         TechnologyName = Name,
                         VersionUsed = versionInfo.Name,
