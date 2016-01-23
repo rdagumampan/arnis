@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechStackTracker", "TechStackTracker.csproj", "{BCE1249A-8298-4F45-A364-7D83FD0781F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechStackTracker.UnitTests", "..\TechStackTracker.UnitTests\TechStackTracker.UnitTests.csproj", "{9F88F207-0AA5-45DB-8039-96A3B21ABFB3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E15A49A4-F174-436D-A534-373DF47CA4B3}"
+	ProjectSection(SolutionItems) = preProject
+		ReadMe.md = ReadMe.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BCE1249A-8298-4F45-A364-7D83FD0781F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCE1249A-8298-4F45-A364-7D83FD0781F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCE1249A-8298-4F45-A364-7D83FD0781F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCE1249A-8298-4F45-A364-7D83FD0781F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F88F207-0AA5-45DB-8039-96A3B21ABFB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F88F207-0AA5-45DB-8039-96A3B21ABFB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F88F207-0AA5-45DB-8039-96A3B21ABFB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F88F207-0AA5-45DB-8039-96A3B21ABFB3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
