@@ -20,18 +20,36 @@ namespace TechStackTracker.Sinks
         public void Flush()
         {
             var report = new StringBuilder();
-            report.AppendLine("DepName, DepVersion, AppName, AppLocation");
+            report.AppendLine("DepName, DepVersion, AppName, AppLocation, ProjName, ProjLocation");
 
-            _reports
-                .SelectMany(r=> r.Dependencies
-                .Select(d=> new
+            var solutionDependencies = _reports
+                .SelectMany(s => s.Dependencies
+                .Select(sd => new
                 {
-                    SlnName = r.Name,
-                    SlnLocation = r.Location,
-                    Name = d.Name,
-                    Version = d.Version,
-                }))
-                .GroupBy(r => r.Name)
+                    SlnName = s.Name,
+                    SlnLocation = s.Location,
+                    CsprojName = string.Empty,
+                    CsprojLocation = string.Empty,
+                    Name = sd.Name,
+                    Version = sd.Version,
+                }));
+
+            var projectDependencies = _reports
+                .SelectMany(s => s.Projects
+                    .SelectMany(p => p.Dependencies
+                        .Select(pd => new
+                        {
+                            SlnName = s.Name,
+                            SlnLocation = s.Location,
+                            CsprojName = p.Name,
+                            CsprojLocation = p.Location,
+                            Name = pd.Name,
+                            Version = pd.Version,
+                        })));
+
+            var consolidatedDependencies = solutionDependencies.Union(projectDependencies);
+
+            consolidatedDependencies.GroupBy(r => r.Name)
                 .ToList()
                 .ForEach(g =>
                 {
@@ -44,7 +62,7 @@ namespace TechStackTracker.Sinks
                         gv.ToList()
                             .ForEach(r =>
                             {
-                                report.AppendFormat("{0},{1},{2},{3},{4}", r.Name, r.Version, r.SlnName, r.SlnLocation, Environment.NewLine);
+                                report.AppendFormat("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",{6}", r.Name, r.Version, r.SlnName, r.SlnLocation, r.CsprojName, r.CsprojLocation, Environment.NewLine);
                             });
                     });
                 });

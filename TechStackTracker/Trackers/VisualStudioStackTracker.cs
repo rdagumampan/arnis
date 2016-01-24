@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -21,10 +22,12 @@ namespace TechStackTracker.Trackers
     public class VisualStudioStackTracker : IStackTracker
     {
         private readonly string _workingDirectory;
+        private readonly List<string> _skipList;
 
-        public VisualStudioStackTracker(string workingDirectory)
+        public VisualStudioStackTracker(string workingDirectory, List<string> skipList)
         {
             _workingDirectory = workingDirectory;
+            _skipList = skipList;
         }
 
         public string Name { get; } = "VisualStudio";
@@ -34,7 +37,11 @@ namespace TechStackTracker.Trackers
         {
             var stackReport = new StackReport();
 
-            var solutionFilesStage1 = Directory.EnumerateFiles(_workingDirectory, "*.sln", SearchOption.AllDirectories).ToList();
+            var solutionFiles = Directory.EnumerateFiles(_workingDirectory, "*.sln", SearchOption.AllDirectories).ToList();
+
+            //skip all files within the skip list
+            var solutionFilesStage1 = solutionFiles.Where(f => !_skipList.Exists(f.Contains))
+                .ToList();
 
             //tracks all with latest versions from 2013 - 2015
             solutionFilesStage1.ForEach(f =>
@@ -129,6 +136,7 @@ namespace TechStackTracker.Trackers
         }
 
         //VS2012 - VS2015 uses the same solution file version (visa MSBUILD parser) which is 12.00
+        //made this obsolete since using the first line in SLN file returns same result but without MSBUILD dependency
         [Obsolete]
         private List<SolutionDependency> TrackWithMsBuild(List<string> files)
         {

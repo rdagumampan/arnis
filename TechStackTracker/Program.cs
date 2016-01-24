@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,27 +17,37 @@ namespace TechStackTracker
         {
             Console.Write("Press key to run...");
 
-            var vsTracker = new VisualStudioStackTracker(_workingDirectory);
-            //var stackReport = vsTracker.Run();
+            var skipFile = Path.Combine(Environment.CurrentDirectory, "skip.data");
+            var skipList = File.ReadAllLines(skipFile).ToList();
 
-            //if (stackReport.Errors.ToList().Any())
-            //{
-            //    Console.ForegroundColor = ConsoleColor.Red;
-            //    Console.WriteLine();
-            //    Console.WriteLine("Unknown files found: {0}", stackReport.Errors.Count());
-            //    stackReport.Errors.ForEach(f =>
-            //    {
-            //        Console.WriteLine("\\t{0}", f);
-            //    });
-            //    Console.ForegroundColor = ConsoleColor.White;
-            //}
+            var vsTracker = new VisualStudioStackTracker(_workingDirectory, skipList);
+            var vsStackReport = vsTracker.Run();
 
             var referenceTracker = new ReferencedAssembliesTracker(_workingDirectory);
-            var stackReport2 = referenceTracker.Run();
+            var refStackReport = referenceTracker.Run();
 
-            //string fileName = @"C:\Users\rddag\Desktop\test.csv";
-            //var stackSink = new CsvStackReportSink(fileName, stackReport.Results);
-            //stackSink.Flush();
+            //consolidate
+            var fullStackReport = new StackReport
+            {
+                Results = vsStackReport.Results.Union(refStackReport.Results).ToList(),
+                Errors = vsStackReport.Errors.Union(refStackReport.Errors).ToList()
+            };
+
+            if (fullStackReport.Errors.ToList().Any())
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine();
+                Console.WriteLine("Unknown files found: {0}", fullStackReport.Errors.Count());
+                fullStackReport.Errors.ForEach(f =>
+                {
+                    Console.WriteLine("\\t{0}", f);
+                });
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+
+            string fileName = @"C:\Users\rddag\Desktop\test.csv";
+            var stackSink = new CsvStackReportSink(fileName, fullStackReport.Results);
+            stackSink.Flush();
 
             Console.Read();
         }

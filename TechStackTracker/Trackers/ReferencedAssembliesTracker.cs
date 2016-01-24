@@ -89,20 +89,15 @@ namespace TechStackTracker.Trackers
                                 ReferenceType = (i.Element(ns + "HintPath") == null) ? "GAC" : "DLL",
                                 Location = (i.Element(ns + "HintPath") == null) ? string.Empty : i.Element(ns + "HintPath").Value
                             };
-                foreach (var v in rawRefences)
-                {
 
-                    var referenceInfo = v.Reference.Split(',').ToList();
-                    var referenceName = referenceInfo[0];
-                    var versionInfo = referenceInfo.Count > 1 ? (referenceInfo[1].Contains("Version") ? referenceInfo[1].Split('=')[1] : string.Empty) : string.Empty;
-
-                    dependecies.Add(new ProjectDependency
+                dependecies.AddRange(from v in rawRefences
+                    let referenceInfo = v.Reference.Split(',').ToList()
+                    let referenceName = referenceInfo[0]
+                    let versionInfo = referenceInfo.Count > 1 ? (referenceInfo[1].Contains("Version") ? referenceInfo[1].Split('=')[1] : string.Empty) : string.Empty
+                    select new ProjectDependency
                     {
-                        Name = referenceName,
-                        Version = versionInfo,
-                        Location = v.Location
+                        Name = referenceName, Version = versionInfo, Location = v.Location
                     });
-                }
             }
             catch (Exception ex)
             {
