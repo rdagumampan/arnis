@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Microsoft.Build.Construction;
 
 namespace TechStackTracker.Trackers
 {
@@ -29,120 +27,112 @@ namespace TechStackTracker.Trackers
             _workingDirectory = workingDirectory;
         }
 
-        public string Name { get;} = "VisualStudio";
+        public string Name { get; } = "VisualStudio";
         public string Description { get; } = "Track all projects that used Microsoft Visual Studio IDE.";
 
         public StackReport Run()
         {
-            var results = new List<StackItem>();
-            var files = Directory.EnumerateFiles(_workingDirectory, "*.sln", SearchOption.AllDirectories).ToList();
+            var stackReport = new StackReport();
 
-            //tracks all with latest versions from 2014
-            var stage1TrackedFiles = TrackWithVisualStudioVersion(files);
-            results.AddRange(stage1TrackedFiles);
+            var solutionFilesStage1 = Directory.EnumerateFiles(_workingDirectory, "*.sln", SearchOption.AllDirectories).ToList();
 
-            //tracks all that were skipped in stage 1
-            var skippedStaged1 = files.Where(f => !results.Exists(r => r.SolutionLocation == f)).ToList();
-            var stage2TrackedFiles = TrackWithSolutionFormat(skippedStaged1);
-            results.AddRange(stage2TrackedFiles);
-
-            //tracks all that were skipped in stage 2
-            var skippedStaged2 = files.Where(f => !results.Exists(r => r.SolutionLocation == f)).ToList();
-            var stage3TrackedFiles = TrackWithMsBuild(skippedStaged2);
-            //var stage3TrackedFiles = TrackWithMsBuild(files);
-            results.AddRange(stage3TrackedFiles);
-
-            //record all skipped files
-            var skippedStage3 = files.Where(f => !results.Exists(r => r.SolutionLocation == f)).ToList();
-
-            return new StackReport
+            //tracks all with latest versions from 2013 - 2015
+            solutionFilesStage1.ForEach(f =>
             {
-                Results = results,
-                Errors = skippedStage3
-            };
-        }
-            
-        private List<VsVersionMap> GetVsVersionMapping()
-        {
-            var vsMapping = new List<VsVersionMap>
-            {
-                new VsVersionMap {ProductVersion = "VS 2002", VsVisualStudioVersion = "7.0", VsSlnFileFormatVersion = "7.0", VsMsBuildVersion = "7"},
-                new VsVersionMap {ProductVersion = "VS 2003", VsVisualStudioVersion = "7.1", VsSlnFileFormatVersion = "8.0", VsMsBuildVersion = "8"},
-                new VsVersionMap {ProductVersion = "VS 2005", VsVisualStudioVersion = "8.0", VsSlnFileFormatVersion = "9.0", VsMsBuildVersion = "9"},
-                new VsVersionMap {ProductVersion = "VS 2008", VsVisualStudioVersion = "9.0", VsSlnFileFormatVersion = "10.0", VsMsBuildVersion = "10"},
-                new VsVersionMap {ProductVersion = "VS 2010", VsVisualStudioVersion = "10.0", VsSlnFileFormatVersion = "11.0", VsMsBuildVersion = "11"},
-                new VsVersionMap {ProductVersion = "VS 2012", VsVisualStudioVersion = "11.0", VsSlnFileFormatVersion = "12.0", VsMsBuildVersion = "12"},
-                new VsVersionMap {ProductVersion = "VS 2013", VsVisualStudioVersion = "12.0", VsSlnFileFormatVersion = "NA", VsMsBuildVersion = "NA"},
-                new VsVersionMap {ProductVersion = "VS 2015", VsVisualStudioVersion = "14.0", VsSlnFileFormatVersion = "NA", VsMsBuildVersion = "NA"},
-            };
+                var versionMap = TrackWithVisualStudioVersion(f);
+                if(null != versionMap)
+                {
+                    var solution = new Solution
+                    {
+                        Name = Path.GetFileNameWithoutExtension(f),
+                        Location = f
+                    };
 
-            return vsMapping;
+                    solution.Dependencies.Add(new SolutionDependency
+                    {
+                        Name = Name,
+                        Version = versionMap.ProductVersion
+                    });
+
+                    stackReport.Results.Add(solution);
+                }
+
+            });
+
+            //tracks all that were skipped in stage 1 from 2003 - 2012
+            var solutionFilesStage2 = solutionFilesStage1.Where(f => !stackReport.Results.Exists(r => r.Location == f)).ToList();
+            solutionFilesStage2.ForEach(f=>
+            {
+                var versionMap = TrackWithSolutionFormat(f);
+                if (null != versionMap)
+                {
+                    var solution = new Solution
+                    {
+                        Name = Path.GetFileNameWithoutExtension(f),
+                        Location = f
+                    };
+
+                    solution.Dependencies.Add(new SolutionDependency
+                    {
+                        Name = Name,
+                        Version = versionMap.ProductVersion
+                    });
+
+                    stackReport.Results.Add(solution);
+                }
+            });
+
+
+            //record all skipped files and save as error
+            var skippedFilesStage2 = solutionFilesStage1.Where(f => !stackReport.Results.Exists(r => r.Location == f)).ToList();
+            stackReport.Errors = skippedFilesStage2;
+
+            return stackReport;
         }
 
         //only VS2013 - VS2015 contains VisualStudioVersion attribute in sln files
-        private List<StackItem> TrackWithVisualStudioVersion(List<string> files)
+        private VsVersionMap TrackWithVisualStudioVersion(string solutionFile)
         {
-            List<StackItem> report = new List<StackItem>();
+            VsVersionMap vsMap = null;
+            string contents = File.ReadAllText(solutionFile);
 
-            files.ForEach(f =>
+            var versionMappings = GetVsVersionMapping();
+            versionMappings.ForEach(v =>
             {
-                string contents = File.ReadAllText(f);
-
-                var versionMappings = GetVsVersionMapping();
-                versionMappings.ForEach(v =>
+                var regex = new Regex($"(\\W|^)VisualStudioVersion\\s=\\s{v.VsVisualStudioVersion}");
+                if (regex.IsMatch(contents))
                 {
-                    var regex = new Regex($"(\\W|^)VisualStudioVersion\\s=\\s{v.VsVisualStudioVersion}");
-                    if (regex.IsMatch(contents))
-                    {
-                        report.Add(new StackItem
-                        {
-                            ComponentName = Name,
-                            ComponentVersion = v.ProductVersion,
-                            SolutionName = Path.GetFileNameWithoutExtension(f),
-                            SolutionLocation = f,
-                            Parser = "VsVersion"
-                        });
-                    }
-                });
+                    vsMap = v;
+                }
             });
 
-            return report;
+            return vsMap;
         }
 
         //VS2012 - VS2015 uses the same solution file format version which is 12.00
-        private List<StackItem> TrackWithSolutionFormat(List<string> files)
+        private VsVersionMap TrackWithSolutionFormat(string f)
         {
-            List<StackItem> report = new List<StackItem>();
+            VsVersionMap vsMap = null;
+            string contents = File.ReadAllText(f);
 
-            files.ForEach(f =>
+            var versionMappings = GetVsVersionMapping();
+            versionMappings.ForEach(v =>
             {
-                string contents = File.ReadAllText(f);
-
-                var versionMappings = GetVsVersionMapping();
-                versionMappings.ForEach(v =>
+                var regex = new Regex($"(\\W |^)Microsoft\\sVisual\\sStudio\\sSolution\\sFile,\\sFormat\\sVersion\\s{v.VsSlnFileFormatVersion}", RegexOptions.Multiline);
+                if (regex.IsMatch(contents))
                 {
-                    var regex = new Regex($"(\\W |^)Microsoft\\sVisual\\sStudio\\sSolution\\sFile,\\sFormat\\sVersion\\s{v.VsSlnFileFormatVersion}",RegexOptions.Multiline);
-                    if (regex.IsMatch(contents))
-                    {
-                        report.Add(new StackItem
-                        {
-                            ComponentName = Name,
-                            ComponentVersion = v.ProductVersion,
-                            SolutionName = Path.GetFileNameWithoutExtension(f),
-                            SolutionLocation = f,
-                            Parser = "SlnFormat"
-                        });
-                    }
-                });
+                    vsMap = v;
+                }
             });
 
-            return report;
+            return vsMap;
         }
 
         //VS2012 - VS2015 uses the same solution file version (visa MSBUILD parser) which is 12.00
-        private List<StackItem> TrackWithMsBuild(List<string> files)
+        [Obsolete]
+        private List<SolutionDependency> TrackWithMsBuild(List<string> files)
         {
-            List<StackItem> report = new List<StackItem>();
+            List<SolutionDependency> report = new List<SolutionDependency>();
 
             files.ForEach(f =>
             {
@@ -169,15 +159,12 @@ namespace TechStackTracker.Trackers
                 var versionMappings = GetVsVersionMapping();
                 var versionInfo = versionMappings.SingleOrDefault(v => v.VsMsBuildVersion == version.ToString());
 
-                if(null != versionInfo)
+                if (null != versionInfo)
                 {
-                    report.Add(new StackItem
+                    report.Add(new SolutionDependency
                     {
-                        ComponentName = Name,
-                        ComponentVersion = versionInfo.ProductVersion,
-                        SolutionName = Path.GetFileNameWithoutExtension(f),
-                        SolutionLocation = f,
-                         Parser = "MsBuild"
+                        Name = Name,
+                        Version = versionInfo.ProductVersion,
                     });
                 }
                 else
@@ -187,6 +174,23 @@ namespace TechStackTracker.Trackers
 
             });
             return report;
+        }
+
+        private List<VsVersionMap> GetVsVersionMapping()
+        {
+            var vsMapping = new List<VsVersionMap>
+            {
+                new VsVersionMap {ProductVersion = "2002", VsVisualStudioVersion = "7.0", VsSlnFileFormatVersion = "7.0", VsMsBuildVersion = "7"},
+                new VsVersionMap {ProductVersion = "2003", VsVisualStudioVersion = "7.1", VsSlnFileFormatVersion = "8.0", VsMsBuildVersion = "8"},
+                new VsVersionMap {ProductVersion = "2005", VsVisualStudioVersion = "8.0", VsSlnFileFormatVersion = "9.0", VsMsBuildVersion = "9"},
+                new VsVersionMap {ProductVersion = "2008", VsVisualStudioVersion = "9.0", VsSlnFileFormatVersion = "10.0", VsMsBuildVersion = "10"},
+                new VsVersionMap {ProductVersion = "2010", VsVisualStudioVersion = "10.0", VsSlnFileFormatVersion = "11.0", VsMsBuildVersion = "11"},
+                new VsVersionMap {ProductVersion = "2012", VsVisualStudioVersion = "11.0", VsSlnFileFormatVersion = "12.0", VsMsBuildVersion = "12"},
+                new VsVersionMap {ProductVersion = "2013", VsVisualStudioVersion = "12.0", VsSlnFileFormatVersion = "NA", VsMsBuildVersion = "NA"},
+                new VsVersionMap {ProductVersion = "2015", VsVisualStudioVersion = "14.0", VsSlnFileFormatVersion = "NA", VsMsBuildVersion = "NA"},
+            };
+
+            return vsMapping;
         }
     }
 }

@@ -9,9 +9,9 @@ namespace TechStackTracker.Sinks
     public class CsvStackReportSink : IStackReportSink
     {
         private readonly string _fileName;
-        private readonly List<StackItem> _reports;
+        private readonly List<Solution> _reports;
 
-        public CsvStackReportSink(string fileName, List<StackItem> reports)
+        public CsvStackReportSink(string fileName, List<Solution> reports)
         {
             _fileName = fileName;
             _reports = reports;
@@ -20,27 +20,34 @@ namespace TechStackTracker.Sinks
         public void Flush()
         {
             var report = new StringBuilder();
-            report.AppendLine("Name, Version, Application, Location");
+            report.AppendLine("DepName, DepVersion, AppName, AppLocation");
 
             _reports
-                .GroupBy(r => r.ComponentName)
+                .SelectMany(r=> r.Dependencies
+                .Select(d=> new
+                {
+                    SlnName = r.Name,
+                    SlnLocation = r.Location,
+                    Name = d.Name,
+                    Version = d.Version,
+                }))
+                .GroupBy(r => r.Name)
                 .ToList()
                 .ForEach(g =>
                 {
                     g.ToList()
-                    .OrderBy(r => r.ComponentVersion)
-                    .GroupBy(grpv => grpv.ComponentVersion)
+                    .OrderBy(r => r.Version)
+                    .GroupBy(grpv => grpv.Version)
                     .ToList()
                     .ForEach(gv =>
                     {
                         gv.ToList()
                             .ForEach(r =>
                             {
-                                report.AppendFormat("{0},{1},{2},{3},{4}", r.ComponentName, r.ComponentVersion, r.SolutionName, r.SolutionLocation, Environment.NewLine);
+                                report.AppendFormat("{0},{1},{2},{3},{4}", r.Name, r.Version, r.SlnName, r.SlnLocation, Environment.NewLine);
                             });
                     });
                 });
-
 
             File.WriteAllText(_fileName, report.ToString(), Encoding.UTF8);
         }
