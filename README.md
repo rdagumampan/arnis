@@ -18,7 +18,8 @@ Scans working folder for project files and identify all DLL used in the project.
 ###Sinks
 Implements IStackReportSInk to write specific format.
 
--CsvStackReportSink
+- CsvStackReportSink
+Save the report into CSV file
 
 ###Next Steps
 - Fix bug when project files is nested deep
