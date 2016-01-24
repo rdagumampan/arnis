@@ -31,7 +31,8 @@ namespace TechStackTracker
             }
 
 
-            var stackSink = new CsvStackReportSink(stackReport.Results);
+            string fileName = @"C:\Users\rddag\Desktop\test.csv";
+            var stackSink = new CsvStackReportSink(fileName, stackReport.Results);
             stackSink.Flush();
 
             Console.Read();

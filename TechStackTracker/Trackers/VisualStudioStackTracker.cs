@@ -9,10 +9,10 @@ using Microsoft.Build.Construction;
 
 namespace TechStackTracker.Trackers
 {
-    public class VsMapping
+    public class VsVersionMap
     {
-        public string Name { get; set; }
-        public string VsVersion { get; set; }
+        public string ProductVersion { get; set; }
+        public string VsVisualStudioVersion { get; set; }
         public string VsSlnFileFormatVersion { get; set; }
         public string VsMsBuildVersion { get; set; }
     }
@@ -49,6 +49,7 @@ namespace TechStackTracker.Trackers
             //tracks all that were skipped in stage 2
             var skippedStaged2 = files.Where(f => !results.Exists(r => r.SolutionLocation == f)).ToList();
             var stage3TrackedFiles = TrackWithMsBuild(skippedStaged2);
+            //var stage3TrackedFiles = TrackWithMsBuild(files);
             results.AddRange(stage3TrackedFiles);
 
             //record all skipped files
@@ -60,24 +61,25 @@ namespace TechStackTracker.Trackers
                 Errors = skippedStage3
             };
         }
-
-        private List<VsMapping> GetVsMapping()
+            
+        private List<VsVersionMap> GetVsVersionMapping()
         {
-            var vsMapping = new List<VsMapping>
+            var vsMapping = new List<VsVersionMap>
             {
-                new VsMapping {Name = "VS 2002", VsVersion = "7.0", VsSlnFileFormatVersion = "7.0", VsMsBuildVersion = "7"},
-                new VsMapping {Name = "VS 2003", VsVersion = "7.1", VsSlnFileFormatVersion = "8.0", VsMsBuildVersion = "8"},
-                new VsMapping {Name = "VS 2005", VsVersion = "8.0", VsSlnFileFormatVersion = "9.0", VsMsBuildVersion = "9"},
-                new VsMapping {Name = "VS 2008", VsVersion = "9.0", VsSlnFileFormatVersion = "10.0", VsMsBuildVersion = "10"},
-                new VsMapping {Name = "VS 2010", VsVersion = "10.0", VsSlnFileFormatVersion = "11.0", VsMsBuildVersion = "11"},
-                new VsMapping {Name = "VS 2012", VsVersion = "11.0", VsSlnFileFormatVersion = "12.0", VsMsBuildVersion = "NA"},
-                new VsMapping {Name = "VS 2013", VsVersion = "12.0", VsSlnFileFormatVersion = "NA", VsMsBuildVersion = "NA"},
-                new VsMapping {Name = "VS 2015", VsVersion = "14.0", VsSlnFileFormatVersion = "NA", VsMsBuildVersion = "NA"},
+                new VsVersionMap {ProductVersion = "VS 2002", VsVisualStudioVersion = "7.0", VsSlnFileFormatVersion = "7.0", VsMsBuildVersion = "7"},
+                new VsVersionMap {ProductVersion = "VS 2003", VsVisualStudioVersion = "7.1", VsSlnFileFormatVersion = "8.0", VsMsBuildVersion = "8"},
+                new VsVersionMap {ProductVersion = "VS 2005", VsVisualStudioVersion = "8.0", VsSlnFileFormatVersion = "9.0", VsMsBuildVersion = "9"},
+                new VsVersionMap {ProductVersion = "VS 2008", VsVisualStudioVersion = "9.0", VsSlnFileFormatVersion = "10.0", VsMsBuildVersion = "10"},
+                new VsVersionMap {ProductVersion = "VS 2010", VsVisualStudioVersion = "10.0", VsSlnFileFormatVersion = "11.0", VsMsBuildVersion = "11"},
+                new VsVersionMap {ProductVersion = "VS 2012", VsVisualStudioVersion = "11.0", VsSlnFileFormatVersion = "12.0", VsMsBuildVersion = "12"},
+                new VsVersionMap {ProductVersion = "VS 2013", VsVisualStudioVersion = "12.0", VsSlnFileFormatVersion = "NA", VsMsBuildVersion = "NA"},
+                new VsVersionMap {ProductVersion = "VS 2015", VsVisualStudioVersion = "14.0", VsSlnFileFormatVersion = "NA", VsMsBuildVersion = "NA"},
             };
 
             return vsMapping;
         }
 
+        //only VS2013 - VS2015 contains VisualStudioVersion attribute in sln files
         private List<StackItem> TrackWithVisualStudioVersion(List<string> files)
         {
             List<StackItem> report = new List<StackItem>();
@@ -86,16 +88,16 @@ namespace TechStackTracker.Trackers
             {
                 string contents = File.ReadAllText(f);
 
-                var versionMappings = GetVsMapping();
+                var versionMappings = GetVsVersionMapping();
                 versionMappings.ForEach(v =>
                 {
-                    var regex = new Regex($"(\\W|^)VisualStudioVersion\\s=\\s{v.VsVersion}");
+                    var regex = new Regex($"(\\W|^)VisualStudioVersion\\s=\\s{v.VsVisualStudioVersion}");
                     if (regex.IsMatch(contents))
                     {
                         report.Add(new StackItem
                         {
-                            TechnologyName = Name,
-                            VersionUsed = v.Name,
+                            ComponentName = Name,
+                            ComponentVersion = v.ProductVersion,
                             SolutionName = Path.GetFileNameWithoutExtension(f),
                             SolutionLocation = f,
                             Parser = "VsVersion"
@@ -107,6 +109,7 @@ namespace TechStackTracker.Trackers
             return report;
         }
 
+        //VS2012 - VS2015 uses the same solution file format version which is 12.00
         private List<StackItem> TrackWithSolutionFormat(List<string> files)
         {
             List<StackItem> report = new List<StackItem>();
@@ -115,7 +118,7 @@ namespace TechStackTracker.Trackers
             {
                 string contents = File.ReadAllText(f);
 
-                var versionMappings = GetVsMapping();
+                var versionMappings = GetVsVersionMapping();
                 versionMappings.ForEach(v =>
                 {
                     var regex = new Regex($"(\\W |^)Microsoft\\sVisual\\sStudio\\sSolution\\sFile,\\sFormat\\sVersion\\s{v.VsSlnFileFormatVersion}",RegexOptions.Multiline);
@@ -123,8 +126,8 @@ namespace TechStackTracker.Trackers
                     {
                         report.Add(new StackItem
                         {
-                            TechnologyName = Name,
-                            VersionUsed = v.Name,
+                            ComponentName = Name,
+                            ComponentVersion = v.ProductVersion,
                             SolutionName = Path.GetFileNameWithoutExtension(f),
                             SolutionLocation = f,
                             Parser = "SlnFormat"
@@ -136,6 +139,7 @@ namespace TechStackTracker.Trackers
             return report;
         }
 
+        //VS2012 - VS2015 uses the same solution file version (visa MSBUILD parser) which is 12.00
         private List<StackItem> TrackWithMsBuild(List<string> files)
         {
             List<StackItem> report = new List<StackItem>();
@@ -153,7 +157,6 @@ namespace TechStackTracker.Trackers
                 var solutionParserParseSolution = solutionParser.GetMethod("ParseSolution", BindingFlags.NonPublic | BindingFlags.Instance);
                 solutionParserVersion = solutionParser.GetProperty("Version", BindingFlags.NonPublic | BindingFlags.Instance);
 
-
                 var solutionParserInstance = solutionParser.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic)[0].Invoke(null);
                 using (var streamReader = new StreamReader(f))
                 {
@@ -163,19 +166,23 @@ namespace TechStackTracker.Trackers
 
                 var version = Convert.ToInt32(solutionParserVersion.GetValue(solutionParserInstance, null));
 
-                var versionMappings = GetVsMapping();
+                var versionMappings = GetVsVersionMapping();
                 var versionInfo = versionMappings.SingleOrDefault(v => v.VsMsBuildVersion == version.ToString());
 
                 if(null != versionInfo)
                 {
                     report.Add(new StackItem
                     {
-                        TechnologyName = Name,
-                        VersionUsed = versionInfo.Name,
+                        ComponentName = Name,
+                        ComponentVersion = versionInfo.ProductVersion,
                         SolutionName = Path.GetFileNameWithoutExtension(f),
                         SolutionLocation = f,
                          Parser = "MsBuild"
                     });
+                }
+                else
+                {
+                    Console.WriteLine(string.Format("{0}: {1}"), versionInfo, f);
                 }
 
             });
