@@ -11,8 +11,16 @@ By consistently monitoring a technology stack in our application portfolio, we c
 Implements IStackTracker which scans the entire folder to perform analysis.
 
 - VisualStudioTracker
+Scans working folder for solution files and identify the version of Visual Studio used.
 - ReferencedAssembliesTracker
+Scans working folder for project files and identify all DLL used in the project. System DLLs are also included.
 
 ###Sinks
 Implements IStackReportSInk to write specific format.
-Default format is CSV.
+
+-CsvStackReportSink
+
+###Next Steps
+- Fix bug when project files is nested deep
+- Support skipping folders
+- More unit tests
