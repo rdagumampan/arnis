@@ -25,3 +25,6 @@ Save the report into CSV file
 - Fix bug when project files is nested deep
 - Support skipping folders
 - More unit tests
+
+###Future
+- Deploy as microservice in cloud where users can upload zip and returns a full dependency report
