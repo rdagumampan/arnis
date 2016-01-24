@@ -7,9 +7,12 @@ By consistently monitoring a technology stack in our application portfolio, we c
 - A critical security report requires all applications using a component to upgrade (OpenCA)
 - You maybe suprised your company uses 3 types of OR mapping tool, 5 kinds of DI frameworks, runs unit tests on nUnit, MSTEST, xUNit etc ;)
 
-##Trackers##
+###Trackers
 Implements IStackTracker which scans the entire folder to perform analysis.
 
-##Sinks##
+- VisualStudioTracker
+- ReferencedAssembliesTracker
+
+###Sinks
 Implements IStackReportSInk to write specific format.
 Default format is CSV.
