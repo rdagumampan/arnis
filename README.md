@@ -1,14 +1,14 @@
 ####Winterfern
-**Winterfern** is a simple dependency tracker for .NET applicationsusing elementary parsing algorithm.
+**Winterfern** is a simple dependency tracker for .NET applications using elementary parsing algorithm. My vision is to create full technology stack report on each application covering platforms, components, techniques, and tools... but im very far from it ;)
 
-By consistently monitoring a technology stack in our application portfolio, we can plan componenent upgrades, monitor 3rd party licenses, consolidate component versions, or strategize decommisioning of projects and tools.
+By consistently monitoring the technology stack in our application portfolio, we can plan for component upgrades, monitor 3rd party usage and licenses, consolidate component versions, or strategize decommisioning of projects and tools.
 
 Supported use cases:
 - Identify applications built on Visual Studio from 2001 to 2015.
 - Identify GAC and DLL dependencies used in each project in your solution.
 - Extensible to suport new trackers and sinks.
 
-#####Trackers
+####Trackers
 Trackers scans the entire workspace folder to perform analysis of solutions and projects to build dependency tree.
 To create your own tracker, implement IStackTracker interface.
 
@@ -17,17 +17,16 @@ Scans working folder for solution files and identify the version of Visual Studi
 - **ReferencedAssembliesTracker**
 Scans working folder for project files and identify all DLL used in the project. System DLLs are also included.
 
-#####Sinks
+####Sinks
 Sinks are writes the tracker's result into specific format or destination.
 To create your own sink, implement IStackReportSink interface.
 
 - **CsvStackReportSink**
 Save the report into CSV file
 
-#####Next Steps
-- Fix bug when project files is nested deep
-- Support skipping folders
+####Next Steps
+- Support web projects for javascript dependencies
 - More unit tests
 
-#####Future
+####Future
 - Deploy as microservice in cloud where users can upload zip and returns a full dependency report
