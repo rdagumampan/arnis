@@ -8,7 +8,7 @@ Supports these use cases:
 - Identify GAC and DLL dependencies used in each project in your solution.
 - Extensible to suport new trackers and sinks.
 
-###Trackers
+#####Trackers
 Trackers scans the entire workspace folder to perform analysis of solutions and projects to build dependency tree.
 To create your own tracker, implement IStackTracker interface.
 
