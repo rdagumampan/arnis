@@ -3,12 +3,14 @@ A simple dependency tracker for projects using elementary parsing algorithm.
 
 By consistently monitoring a technology stack in our application portfolio, we can perform threat modeling, plan for upgrades, monitoring licensing or decommisioning of projects and tools.
 
-- Identify what applications are built on Visual Studio from 2001 to 2015
-- A critical security report requires all applications using a component to upgrade (OpenCA)
-- You maybe suprised your company uses 3 types of OR mapping tool, 5 kinds of DI frameworks, runs unit tests on nUnit, MSTEST, xUNit etc ;)
+Supports these use cases:
+- Identify what applications are built on Visual Studio from 2001 to 2015.
+- Identify GAC and DLL dependencies used in each project in your solution.
+- Extensible to suport new trackers and sinks.
 
 ###Trackers
-Implements IStackTracker which scans the entire folder to perform analysis.
+Trackers scans the entire workspace folder to perform analysis of solutions and projects to build dependency tree.
+To create your own tracker, implement IStackTracker interface.
 
 - VisualStudioTracker
 Scans working folder for solution files and identify the version of Visual Studio used.
@@ -16,7 +18,8 @@ Scans working folder for solution files and identify the version of Visual Studi
 Scans working folder for project files and identify all DLL used in the project. System DLLs are also included.
 
 ###Sinks
-Implements IStackReportSInk to write specific format.
+Sinks are writes the tracker's result into specific format or destination.
+To create your own sink, implement IStackReportSink interface.
 
 - CsvStackReportSink
 Save the report into CSV file
