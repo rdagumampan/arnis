@@ -177,7 +177,7 @@ namespace Winterfern.Trackers
                 }
                 else
                 {
-                    Console.WriteLine(string.Format("{0}: {1}"), versionInfo, f);
+                    Console.WriteLine("Version not available: {0}", f);
                 }
 
             });

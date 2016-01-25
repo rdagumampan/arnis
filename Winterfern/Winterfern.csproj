@@ -48,9 +48,12 @@
   <ItemGroup>
     <Compile Include="IStackTracker.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Project.cs" />
+    <Compile Include="ProjectDependency.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sinks\CsvStackReportSink.cs" />
     <Compile Include="IStackReportSink.cs" />
+    <Compile Include="Solution.cs" />
     <Compile Include="SolutionDependency.cs" />
     <Compile Include="StackReport.cs" />
     <Compile Include="Trackers\ReferencedAssembliesTracker.cs" />
