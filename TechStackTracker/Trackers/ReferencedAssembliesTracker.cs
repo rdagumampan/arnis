@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace TechStackTracker.Trackers
+namespace Winterfern.Trackers
 {
     public class ReferencedAssembliesTracker : IStackTracker
     {

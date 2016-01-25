@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TechStackTracker
+namespace Winterfern
 {
     public interface IStackTracker
     {

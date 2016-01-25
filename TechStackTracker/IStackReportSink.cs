@@ -1,4 +1,4 @@
-﻿namespace TechStackTracker
+﻿namespace Winterfern
 {
     interface IStackReportSink
     {

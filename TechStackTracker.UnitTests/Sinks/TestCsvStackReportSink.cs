@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using NUnit.Framework;
-using TechStackTracker.Sinks;
 
-namespace TechStackTracker.UnitTests.Sinks
+namespace Winterfern.UnitTests.Sinks
 {
     [TestFixture]
     public class TestCsvStackReportSink

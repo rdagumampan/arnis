@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TechStackTracker.Sinks;
-using TechStackTracker.Trackers;
+using Winterfern.Trackers;
+using Winterfern.Sinks;
 
-namespace TechStackTracker
+namespace Winterfern
 {
     class Program
     {

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TechStackTracker")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Winterfern")]
+[assembly: AssemblyDescription("A simple dependency tracker for .NET applications")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("TechStackTracker")]
+[assembly: AssemblyProduct("Winterfern")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

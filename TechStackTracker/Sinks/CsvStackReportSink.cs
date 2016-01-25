@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace TechStackTracker.Sinks
+namespace Winterfern.Sinks
 {
     public class CsvStackReportSink : IStackReportSink
     {
