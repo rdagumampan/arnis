@@ -12,16 +12,16 @@ Supports these use cases:
 Trackers scans the entire workspace folder to perform analysis of solutions and projects to build dependency tree.
 To create your own tracker, implement IStackTracker interface.
 
-- VisualStudioTracker
+- **VisualStudioTracker**
 Scans working folder for solution files and identify the version of Visual Studio used.
-- ReferencedAssembliesTracker
+- **ReferencedAssembliesTracker**
 Scans working folder for project files and identify all DLL used in the project. System DLLs are also included.
 
 ####Sinks
 Sinks are writes the tracker's result into specific format or destination.
 To create your own sink, implement IStackReportSink interface.
 
-- CsvStackReportSink
+- **CsvStackReportSink**
 Save the report into CSV file
 
 ####Next Steps
