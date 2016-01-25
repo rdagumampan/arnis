@@ -1,10 +1,10 @@
-###TechStackTracker
-A simple dependency tracker for projects using elementary parsing algorithm.
+###Winterfern
+**Winterfern** is a simple dependency tracker for .NET applications using elementary parsing algorithm. My vision is to create full technology stack report on each application covering platforms, components, techniques, and tools... but im very far from it ;)
 
-By consistently monitoring a technology stack in our application portfolio, we can perform threat modeling, plan for upgrades, monitoring licensing or decommisioning of projects and tools.
+By consistently monitoring the technology stack in our application portfolio, we can plan for component upgrades, monitor 3rd party usage and licenses, consolidate component versions, or strategize decommisioning of projects and tools.
 
-Supports these use cases:
-- Identify what applications are built on Visual Studio from 2001 to 2015.
+Supported use cases:
+- Identify applications built on Visual Studio from 2001 to 2015.
 - Identify GAC and DLL dependencies used in each project in your solution.
 - Extensible to suport new trackers and sinks.
 
@@ -25,8 +25,7 @@ To create your own sink, implement IStackReportSink interface.
 Save the report into CSV file
 
 ####Next Steps
-- Fix bug when project files is nested deep
-- Support skipping folders
+- Support web projects for javascript dependencies
 - More unit tests
 
 ####Future
