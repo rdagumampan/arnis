@@ -1,4 +1,4 @@
-##TechStackTracker
+###TechStackTracker
 A simple dependency tracker for projects using elementary parsing algorithm.
 
 By consistently monitoring a technology stack in our application portfolio, we can perform threat modeling, plan for upgrades, monitoring licensing or decommisioning of projects and tools.
