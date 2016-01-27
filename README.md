@@ -18,15 +18,15 @@ Scans working folder for solution files and identify the version of Visual Studi
 Scans working folder for project files and identify all DLL used in the project. System DLLs are also included.
 
 ####Sinks
-Sinks are writes the tracker's result into specific format or destination.
+Sinks writes the tracker's result into specific format or destination.
 To create your own sink, implement IStackReportSink interface.
 
 - **CsvStackReportSink**
 Save the report into CSV file
 
 ####Next Steps
-- Support web projects for javascript dependencies
-- More unit tests
+- Support tracking SQL Server versions
+- Support tracking web projects dependencies
 
 ####Future
 - Deploy as microservice in cloud where users can upload zip and returns a full dependency report
