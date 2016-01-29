@@ -8,6 +8,13 @@ Supported use cases:
 - Identify GAC and DLL dependencies used in each project in your solution.
 - Extensible to suport new trackers and sinks.
 
+####How to use
+    C:\winterfern /wf:"<your_workspace_folder>" /sf:"<your_desired_csv_file>"
+
+Example (simple):
+
+	C:\winterfern /wf:"c:\github\winterfern" /sf:"c:\stackreport.winterfern.csv"
+    
 ####Trackers
 Trackers scans the entire workspace folder to perform analysis of solutions and projects to build dependency tree.
 To create your own tracker, implement IStackTracker interface.
@@ -18,15 +25,15 @@ Scans working folder for solution files and identify the version of Visual Studi
 Scans working folder for project files and identify all DLL used in the project. System DLLs are also included.
 
 ####Sinks
-Sinks are writes the tracker's result into specific format or destination.
+Sinks writes the tracker's result into specific format or destination.
 To create your own sink, implement IStackReportSink interface.
 
 - **CsvStackReportSink**
 Save the report into CSV file
 
 ####Next Steps
-- Support web projects for javascript dependencies
-- More unit tests
+- Support tracking SQL Server versions
+- Support tracking web projects dependencies
 
 ####Future
 - Deploy as microservice in cloud where users can upload zip and returns a full dependency report
