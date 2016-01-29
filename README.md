@@ -10,9 +10,8 @@ Supported use cases:
 
 ####How to use
     C:\winterfern /wf:<your_workspace_folder> /sf:<your_desired_csv_file>
-
 Example:
-    C:\winterfern /wf:c:\github\winterfern /sf:c:\stackreport.winterfern.csv
+	C:\winterfern /wf:c:\github\winterfern /sf:c:\stackreport.winterfern.csv
     
 ####Trackers
 Trackers scans the entire workspace folder to perform analysis of solutions and projects to build dependency tree.
