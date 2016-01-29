@@ -8,6 +8,12 @@ Supported use cases:
 - Identify GAC and DLL dependencies used in each project in your solution.
 - Extensible to suport new trackers and sinks.
 
+####How to use
+    C:\winterfern /wf:<your_workspace_folder> /sf:<your_desired_csv_file>
+
+Example:
+    C:\winterfern /wf:c:\github\winterfern /sf:c:\stackreport.winterfern.csv
+    
 ####Trackers
 Trackers scans the entire workspace folder to perform analysis of solutions and projects to build dependency tree.
 To create your own tracker, implement IStackTracker interface.
