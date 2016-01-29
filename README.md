@@ -12,6 +12,7 @@ Supported use cases:
     C:\winterfern /wf:<your_workspace_folder> /sf:<your_desired_csv_file>
 
 Example:
+
 	C:\winterfern /wf:c:\github\winterfern /sf:c:\stackreport.winterfern.csv
     
 ####Trackers
