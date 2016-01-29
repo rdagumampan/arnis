@@ -9,12 +9,16 @@ Supported use cases:
 - Extensible to suport new trackers and sinks.
 
 ####How to use
-    C:\winterfern /wf:"<your_workspace_folder>" /sf:"<your_desired_csv_file>"
+    C:\winterfern /wf:"<your_workspace_folder>" /sf:"<your_desired_csv_file>" /skf:<skip_these_folders>
 
 Example (simple):
 
 	C:\winterfern /wf:"c:\github\winterfern" /sf:"c:\stackreport.winterfern.csv"
-    
+
+Example (with skip file):
+
+	C:\winterfern /wf:"c:\github\winterfern" /sf:"c:\stackreport.winterfern.csv" /skf:"c:\skip.txt"
+
 ####Trackers
 Trackers scans the entire workspace folder to perform analysis of solutions and projects to build dependency tree.
 To create your own tracker, implement IStackTracker interface.
