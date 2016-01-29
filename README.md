@@ -5,7 +5,7 @@ By consistently monitoring the technology stack in our application portfolio, we
 
 At the moment, you can:
 - identify applications built on Visual Studio from 2001 to 2015.
-- identify GAC and DLL dependencies used in each project in your solution.
+- identify GAC and DLL dependencies used in each project in the solution.
 - extend to suport new trackers and sinks.
 
 ####How to use
