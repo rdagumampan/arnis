@@ -20,16 +20,16 @@ namespace Winterfern.Sinks
         public void Flush()
         {
             var report = new StringBuilder();
-            report.AppendLine("DepName, DepVersion, AppName, AppLocation, ProjName, ProjLocation");
+            report.AppendLine("Component, Version, SolutionName, SolutionLocation, ProjectName, ProjectLocation");
 
             var solutionDependencies = _reports
                 .SelectMany(s => s.Dependencies
                 .Select(sd => new
                 {
-                    SlnName = s.Name,
-                    SlnLocation = s.Location,
-                    CsprojName = string.Empty,
-                    CsprojLocation = string.Empty,
+                    SolutionName = s.Name,
+                    SolutionLocation = s.Location,
+                    ProjectName = string.Empty,
+                    ProjectLocation = string.Empty,
                     Name = sd.Name,
                     Version = sd.Version,
                 }));
@@ -39,10 +39,10 @@ namespace Winterfern.Sinks
                     .SelectMany(p => p.Dependencies
                         .Select(pd => new
                         {
-                            SlnName = s.Name,
-                            SlnLocation = s.Location,
-                            CsprojName = p.Name,
-                            CsprojLocation = p.Location,
+                            SolutionName = s.Name,
+                            SolutionLocation = s.Location,
+                            ProjectName = p.Name,
+                            ProjectLocation = p.Location,
                             Name = pd.Name,
                             Version = pd.Version,
                         })));
@@ -62,7 +62,7 @@ namespace Winterfern.Sinks
                         gv.ToList()
                             .ForEach(r =>
                             {
-                                report.AppendFormat("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",{6}", r.Name, r.Version, r.SlnName, r.SlnLocation, r.CsprojName, r.CsprojLocation, Environment.NewLine);
+                                report.AppendFormat("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",{6}", r.Name, r.Version, r.SolutionName, r.SolutionLocation, r.ProjectName, r.ProjectLocation, Environment.NewLine);
                             });
                     });
                 });

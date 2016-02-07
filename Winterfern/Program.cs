@@ -10,12 +10,11 @@ using Winterfern.Sinks;
 
 namespace Winterfern
 {
-    class Program
+    static class Program
     {
         //winterfern /wf:c:\users\rddag\dss /sf:c:\test.csv
         static void Main(string[] args)
         {
-
             try
             {
                 Regex regex = new Regex(@"/(?<name>.+?):(?<val>.+)");
@@ -29,6 +28,9 @@ namespace Winterfern
                     Console.WriteLine("\t" + s.Key + "," + s.Value);
                 }
                 );
+
+                //settings.Add("wf", @"C:\Users\rddag\DSS\imagestore");
+                //settings.Add("sf", @"C:\Users\rddag\Desktop\stackreport.ons.csv");
 
                 string wf = settings.SingleOrDefault(s => s.Key == "wf").Value;
                 if (null == wf)
@@ -46,7 +48,7 @@ namespace Winterfern
                 string skf = settings.SingleOrDefault(s => s.Key == "skf").Value;
                 if (null == skf)
                 {
-                    Console.WriteLine("No skip file (skip.data) set. /skf:<skipfile>");
+                    Console.WriteLine("No skip file (skip.data) defined. /skf:<skipfile>");
                 }
                 else
                 {
@@ -54,10 +56,15 @@ namespace Winterfern
                     if (File.Exists(skipFile))
                     {
                         skipList = File.ReadAllLines(skipFile).ToList();
+
+                        if (!skipList.Any())
+                        {
+                            Console.WriteLine("Warning: Skip file is empty, but it's ok.");
+                        }
                     }
                     else
                     {
-                        Console.WriteLine("Warning: Skip file doesn't exists, but we'll still continue anyway");
+                        Console.WriteLine("Warning: Skip file doesn't exists, but we'll continue anyway");
                     }
                 }
 
@@ -65,10 +72,10 @@ namespace Winterfern
 
                 //TODO: make this dynamic by reflecting all IStackTracker
                 var vsTracker = new VisualStudioStackTracker(wf, skipList);
-                var vsStackReport = vsTracker.Run();
+                var vsStackReport = Task.Run(() => vsTracker.Run()).Result;
 
                 var referenceTracker = new ReferencedAssembliesTracker(wf);
-                var refStackReport = referenceTracker.Run();
+                var refStackReport = Task.Run(() => referenceTracker.Run()).Result;
 
                 //consolidate
                 //TODO: make this dynamic by reflecting all IStackReportSink
@@ -93,8 +100,9 @@ namespace Winterfern
                 var stackSink = new CsvStackReportSink(sf, fullStackReport.Results);
                 stackSink.Flush();
 
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Done! Check " + sf);
-
+                Console.ForegroundColor = ConsoleColor.White;
             }
             catch (Exception ex)
             {
@@ -103,6 +111,8 @@ namespace Winterfern
                 Console.WriteLine("Error running winterfern. \n" + ex.Message);
                 Console.ForegroundColor = ConsoleColor.White;
             }
+
+            Console.Read();
         }
     }
 }

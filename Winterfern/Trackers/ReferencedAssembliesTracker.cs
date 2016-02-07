@@ -87,7 +87,7 @@ namespace Winterfern.Trackers
                                 ProjectFile = projectFile,
                                 Reference = i.Attribute("Include").Value,
                                 ReferenceType = (i.Element(ns + "HintPath") == null) ? "GAC" : "DLL",
-                                Location = (i.Element(ns + "HintPath") == null) ? string.Empty : i.Element(ns + "HintPath").Value
+                                Location = (i.Element(ns + "HintPath") == null) ? string.Empty : Path.GetFullPath(Path.Combine(Path.GetDirectoryName(projectFile), i.Element(ns + "HintPath").Value))
                             };
 
                 dependecies.AddRange(from v in rawRefences
@@ -98,6 +98,21 @@ namespace Winterfern.Trackers
                     {
                         Name = referenceName, Version = versionInfo, Location = v.Location
                     });
+
+                dependecies.ForEach(f =>
+                {
+                    if (!string.IsNullOrEmpty(f.Location))
+                    {
+                        var exists = File.Exists(f.Location);
+                        if (!exists)
+                        {
+                            Console.ForegroundColor= ConsoleColor.Red;
+                            Console.WriteLine("Missing dependency file: dll: {0}, targetProject: {1}", f.Location, projectFile);
+                        }
+                    }
+                });
+                Console.ForegroundColor = ConsoleColor.White;
+
             }
             catch (Exception ex)
             {
