@@ -5,7 +5,7 @@ At the moment, you can:
 - track applications built on Visual Studio from 2001 to 2015.
 - track target framework versions
 - track referenced assemblies from nuget packages and GAC/Referenced Assesmblies folder.
-- extendibe to support new trackers and sinks.
+- extensible to support new trackers and sinks.
 
 By consistently monitoring the technology stack in our application portfolio, we can better plan for component upgrades, monitor 3rd party usage, consolidate component versions, or strategize decommisioning of projects and tools.
 
