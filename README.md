@@ -1,5 +1,5 @@
 ###Winterfern
-**Winterfern** is a simple dependency tracker for .NET applications using elementary parsing algorithm. My vision is to create full technology stack report on each application covering platforms, components, techniques, and tools... but im very far from it ;)
+**Winterfern** is a no-brainer dependency tracker for .NET applications using elementary parsing algorithm. 
 
 At the moment, you can:
 - track applications built on Visual Studio from 2001 to 2015.
@@ -7,7 +7,7 @@ At the moment, you can:
 - track referenced assemblies from nuget packages and GAC/Referenced Assesmblies folder.
 - extendibe to support new trackers and sinks.
 
-By consistently monitoring the technology stack in our application portfolio, we can plan for component upgrades, monitor 3rd party usage, consolidate component versions, or strategize decommisioning of projects and tools.
+My vision is to create full technology stack report on each application covering platforms, components, techniques, and tools... but im very far from it ;). I believe that by consistently monitoring the technology stack in our application portfolio, we can plan for component upgrades, monitor 3rd party usage, consolidate component versions, or strategize decommisioning of projects and tools.
 
 ####How to use
     c:\winterfern /wf:"<your_workspace_folder>" /sf:"<your_desired_csv_file>" /skf:<skip_these_folders>
