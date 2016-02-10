@@ -41,7 +41,7 @@ Save the report into CSV file
 - Support tracking web projects dependencies
 
 ####Disclaimer
-Winterfern is a tool i initially developed for personal use and and no guarantee of 100% reliability. This is not runtime dependency tracer. If you need more sophisticated runtime analysis I recommend [Dependency Walker](http://www.dependencywalker.com/), [ILSPy](https://github.com/icsharpcode/ILSpy), [NDepend](http://www.ndepend.com/) or [Reflector](http://www.red-gate.com/products/dotnet-development/reflector/) tools.
+Winterfern does not guarantee 100% reliability. This is not runtime dependency tracer. If you need more sophisticated runtime analysis I recommend [Dependency Walker](http://www.dependencywalker.com/), [ILSPy](https://github.com/icsharpcode/ILSpy), [NDepend](http://www.ndepend.com/) or [Reflector](http://www.red-gate.com/products/dotnet-development/reflector/) tools.
 
 ####Future
 - Create a sink targetting a Web API in azure and deploy simple site to view the full dependency report
