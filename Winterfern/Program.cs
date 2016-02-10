@@ -29,9 +29,6 @@ namespace Winterfern
                 }
                 );
 
-                //settings.Add("wf", @"C:\Users\rddag\DSS\imagestore");
-                //settings.Add("sf", @"C:\Users\rddag\Desktop\stackreport.ons.csv");
-
                 string wf = settings.SingleOrDefault(s => s.Key == "wf").Value;
                 if (null == wf)
                 {
@@ -77,12 +74,21 @@ namespace Winterfern
                 var referenceTracker = new ReferencedAssembliesTracker(wf);
                 var refStackReport = Task.Run(() => referenceTracker.Run()).Result;
 
+                var frameworkVersionTracker = new FrameworkVersionTracker(wf);
+                var frameoworkVersionReport = Task.Run(() => frameworkVersionTracker.Run()).Result;
+
                 //consolidate
                 //TODO: make this dynamic by reflecting all IStackReportSink
                 var fullStackReport = new StackReport
                 {
-                    Results = vsStackReport.Results.Union(refStackReport.Results).ToList(),
-                    Errors = vsStackReport.Errors.Union(refStackReport.Errors).ToList()
+                    Results = vsStackReport.Results
+                        .Union(refStackReport.Results)
+                        .Union(frameoworkVersionReport.Results)
+                        .ToList(),
+                    Errors = vsStackReport.Errors
+                        .Union(refStackReport.Errors)
+                        .Union(frameoworkVersionReport.Errors)
+                        .ToList()
                 };
 
                 if (fullStackReport.Errors.ToList().Any())

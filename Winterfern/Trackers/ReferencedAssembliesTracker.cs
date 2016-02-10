@@ -79,6 +79,14 @@ namespace Winterfern.Trackers
                 XDocument xml = XDocument.Load(projectFile);
                 XNamespace ns = XNamespace.Get("http://schemas.microsoft.com/developer/msbuild/2003");
 
+                var targetFrameworkVersion =
+                    (from l in xml.Descendants(ns + "PropertyGroup")
+                     from i in l.Elements(ns + "TargetFrameworkVersion")
+                     select new
+                     {
+                         x = i.Value
+                     }).First().x.ToString();
+
                 var rawRefences = 
                     from l in xml.Descendants(ns + "ItemGroup")
                         from i in l.Elements(ns + "Reference")
@@ -93,8 +101,8 @@ namespace Winterfern.Trackers
                 dependecies.AddRange(from v in rawRefences
                     let referenceInfo = v.Reference.Split(',').ToList()
                     let referenceName = referenceInfo[0]
-                    let versionInfo = referenceInfo.Count > 1 ? (referenceInfo[1].Contains("Version") ? referenceInfo[1].Split('=')[1] : string.Empty) : string.Empty
-                    select new ProjectDependency
+                    let versionInfo = referenceInfo.Count > 1 ? (referenceInfo[1].Contains("Version") ? referenceInfo[1].Split('=')[1] : "<Missing>") : targetFrameworkVersion
+                                     select new ProjectDependency
                     {
                         Name = referenceName, Version = versionInfo, Location = v.Location
                     });
