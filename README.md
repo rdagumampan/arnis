@@ -4,9 +4,10 @@
 By consistently monitoring the technology stack in our application portfolio, we can plan for component upgrades, monitor 3rd party usage, consolidate component versions, or strategize decommisioning of projects and tools.
 
 At the moment, you can:
-- identify applications built on Visual Studio from 2001 to 2015.
-- identify GAC and DLL dependencies used in each project in the solution.
-- extend to suport new trackers and sinks.
+- track applications built on Visual Studio from 2001 to 2015.
+- track target framework versions
+- track referenced assemblies from nuget packages and GAC/Referenced Assesmblies folder.
+- extendibe to support new trackers and sinks.
 
 ####How to use
     c:\winterfern /wf:"<your_workspace_folder>" /sf:"<your_desired_csv_file>" /skf:<skip_these_folders>
@@ -40,8 +41,6 @@ To create your own sink, implement IStackReportSink interface.
 Save the report into CSV file
 
 ####Next Steps
-- Identify project's target framework versions
-- Identify GAC assembly version info
 - Support tracking web projects dependencies
 
 ####Limitations
