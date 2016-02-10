@@ -33,33 +33,81 @@
 
 <p><strong>Winterfern</strong> is a simple dependency tracker for .NET applications using elementary parsing algorithm. My vision is to create full technology stack report on each application covering platforms, components, techniques, and tools... but im very far from it ;)</p>
 
-<p>By consistently monitoring the technology stack in our application portfolio, we can plan for component upgrades, monitor 3rd party usage and licenses, consolidate component versions, or strategize decommisioning of projects and tools. </p>
+<p>By consistently monitoring the technology stack in our application portfolio, we can plan for component upgrades, monitor 3rd party usage, consolidate component versions, or strategize decommisioning of projects and tools.</p>
 
-<p>Supported use cases:</p>
+<p>At the moment, you can:</p>
 
 <ul>
-<li>Identify applications built on Visual Studio from 2001 to 2015.</li>
-<li>Identify GAC and DLL dependencies used in each project in your solution.</li>
-<li>Extensible to suport new trackers and sinks.</li>
+<li>track applications built on Visual Studio from 2001 to 2015.</li>
+<li>track target framework versions</li>
+<li>track referenced assemblies from nuget packages and GAC/Referenced Assesmblies folder.</li>
+<li>extendibe to support new trackers and sinks.</li>
 </ul>
 
 <h4>
-<a id="how-it-works" class="anchor" href="#how-it-works" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How it works</h4>
+<a id="how-to-use" class="anchor" href="#how-to-use" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How to use</h4>
 
-<p>Winterfern scans the entire workspace folder to perform analysis of VS solutions and projects to build dependency tree.
-Sinks are create to save result into specific format or destination.</p>
+<pre><code>c:\winterfern /wf:"&lt;your_workspace_folder&gt;" /sf:"&lt;your_desired_csv_file&gt;" /skf:&lt;skip_these_folders&gt;
+</code></pre>
+
+<p>Example (simple):</p>
+
+<pre><code>c:\winterfern /wf:"c:\github\winterfern" /sf:"c:\stackreport.winterfern.csv"
+</code></pre>
+
+<p>Example (with skip file):</p>
+
+<pre><code>c:\winterfern /wf:"c:\github\winterfern" /sf:"c:\stackreport.winterfern.csv" /skf:"c:\skip.txt"
+
+where skip.txt contains
+c:\winterfern\bin\debug
+c:\winterfern\packages
+</code></pre>
 
 <h4>
-<a id="disclaimer" class="anchor" href="#disclaimer" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Disclaimer</h4>
+<a id="trackers" class="anchor" href="#trackers" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Trackers</h4>
 
-<p>Winterfern is a tool i initially developed for personal use and and no guarantee 100% reliability.
-This is not runtime dependency tracer. If you need more sophisticated analysis I recommend Dependency Walker, ILSPy, NDepend or Reflector tools.</p>
+<p>Trackers scans the entire workspace folder to perform analysis of solutions and projects to build dependency tree.
+To create your own tracker, implement IStackTracker interface.</p>
+
+<ul>
+<li>
+<strong>VisualStudioTracker</strong>
+Scans working folder for solution files and identify the version of Visual Studio used.</li>
+<li>
+<strong>ReferencedAssembliesTracker</strong>
+Scans working folder for project files and identify all DLL used in the project. System DLLs are also included.</li>
+</ul>
+
+<h4>
+<a id="sinks" class="anchor" href="#sinks" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Sinks</h4>
+
+<p>Sinks writes the tracker's result into specific format or destination.
+To create your own sink, implement IStackReportSink interface.</p>
+
+<ul>
+<li>
+<strong>CsvStackReportSink</strong>
+Save the report into CSV file</li>
+</ul>
+
+<h4>
+<a id="next-steps" class="anchor" href="#next-steps" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Next Steps</h4>
+
+<ul>
+<li>Support tracking web projects dependencies</li>
+</ul>
+
+<h4>
+<a id="limitations" class="anchor" href="#limitations" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Limitations</h4>
+
+<p>Winterfern is a tool i initially developed for personal use and and no guarantee 100% reliability. This is not runtime dependency tracer. If you need more sophisticated runtime analysis I recommend <a href="http://www.dependencywalker.com/">Dependency Walker</a>, <a href="https://github.com/icsharpcode/ILSpy">ILSPy</a>, <a href="http://www.ndepend.com/">NDepend</a> or <a href="http://www.red-gate.com/products/dotnet-development/reflector/">Reflector</a> tools.</p>
 
 <h4>
 <a id="future" class="anchor" href="#future" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Future</h4>
 
 <ul>
-<li>Deploy as microservice in cloud where users can upload zip and returns a full dependency report</li>
+<li>Create a sink targetting a Web API in azure and deploy simple site to view the full dependency report</li>
 </ul>
 
 <h4>
