@@ -1,5 +1,7 @@
-###Winterfern
+####Winterfern 
 **Winterfern** is a no-brainer dependency tracker for .NET applications using elementary parsing algorithm. 
+
+![](https://ci.appveyor.com/api/projects/status/github/rdagumampan/winterfern?branch=master&svg=true)
 
 At the moment, you can:
 - track applications built on Visual Studio from 2001 to 2015.
