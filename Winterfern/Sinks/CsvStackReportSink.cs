@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Winterfern.Sinks
+namespace Arnis.Sinks
 {
     public class CsvStackReportSink : IStackReportSink
     {

@@ -5,14 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Winterfern.Trackers;
-using Winterfern.Sinks;
+using Arnis.Trackers;
+using Arnis.Sinks;
 
-namespace Winterfern
+namespace Arnis
 {
     static class Program
     {
-        //winterfern /wf:c:\users\rddag\dss /sf:c:\test.csv
+        //arnis /wf:c:\users\rddag\dss /sf:c:\test.csv
         static void Main(string[] args)
         {
             try
@@ -22,7 +22,7 @@ namespace Winterfern
                     regex.Match(s)).Where(m => m.Success)
                     .ToDictionary(m => m.Groups[1].Value, m => m.Groups[2].Value);
 
-                Console.WriteLine("Running winterfern on ff settings:");
+                Console.WriteLine("Running Arnis on ff settings:");
                 settings.ToList().ForEach(s =>
                 {
                     Console.WriteLine("\t" + s.Key + "," + s.Value);
@@ -32,8 +32,8 @@ namespace Winterfern
                 //settings.Add("wf", @"C:\Users\rddag\DSS\imagestore");
                 //settings.Add("sf", @"C:\Users\rddag\Desktop\stackreport.imagestore.csv");
 
-                settings.Add("wf", @"C:\Users\rddag\Desktop\GitHub\winterfern");
-                settings.Add("sf", @"C:\Users\rddag\Desktop\stackreport.winterfern.csv");
+                settings.Add("wf", @"C:\Users\rddag\Desktop\GitHub\arnis");
+                settings.Add("sf", @"C:\Users\rddag\Desktop\stackreport.arnis.csv");
 
                 string wf = settings.SingleOrDefault(s => s.Key == "wf").Value;
                 if (null == wf)
@@ -120,7 +120,7 @@ namespace Winterfern
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine();
-                Console.WriteLine("Error running winterfern. \n" + ex.Message);
+                Console.WriteLine("Error running Arnis. \n" + ex.Message);
                 Console.ForegroundColor = ConsoleColor.White;
             }
 

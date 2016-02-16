@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace Winterfern.Trackers
+namespace Arnis.Trackers
 {
     public class ReferencedAssembliesTracker : IStackTracker
     {

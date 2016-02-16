@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Winterfern
+namespace Arnis
 {
     public class Solution
     {

@@ -1,4 +1,4 @@
-﻿namespace Winterfern
+﻿namespace Arnis
 {
     public class ProjectDependency
     {

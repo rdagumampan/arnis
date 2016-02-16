@@ -58,9 +58,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Winterfern\Winterfern.csproj">
+    <ProjectReference Include="..\Winterfern\Arnis.csproj">
       <Project>{BCE1249A-8298-4F45-A364-7D83FD0781F8}</Project>
-      <Name>Winterfern</Name>
+      <Name>Arnis</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

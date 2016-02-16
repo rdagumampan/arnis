@@ -6,7 +6,7 @@ using System.Net;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace Winterfern.Trackers
+namespace Arnis.Trackers
 {
     public class VsVersionMap
     {
