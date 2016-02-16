@@ -37,6 +37,8 @@ Sinks saves the result into specific format or destination. Currently, only CSV 
 - **CsvStackReportSink**
 Save the report into CSV file
 
+![]({{site.baseurl}}/https://rdagumampan.files.wordpress.com/2016/02/winterfernresult.png)
+
 ####Disclaimer
 Winterfern does not guarantee 100% reliability. This is not runtime dependency tracer. If you need more sophisticated runtime analysis I recommend [Dependency Walker](http://www.dependencywalker.com/), [ILSPy](https://github.com/icsharpcode/ILSpy), [NDepend](http://www.ndepend.com/) or [Reflector](http://www.red-gate.com/products/dotnet-development/reflector/) tools.
 
