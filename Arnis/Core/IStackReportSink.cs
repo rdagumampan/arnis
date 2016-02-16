@@ -1,4 +1,4 @@
-﻿namespace Arnis
+﻿namespace Arnis.Core
 {
     interface IStackReportSink
     {

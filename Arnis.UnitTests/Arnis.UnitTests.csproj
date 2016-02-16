@@ -7,8 +7,8 @@
     <ProjectGuid>{9F88F207-0AA5-45DB-8039-96A3B21ABFB3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Winterfern.UnitTests</RootNamespace>
-    <AssemblyName>Winterfern.UnitTests</AssemblyName>
+    <RootNamespace>Arnis.UnitTests</RootNamespace>
+    <AssemblyName>Arnis.UnitTests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

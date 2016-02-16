@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Arnis.Core;
 using Arnis.Trackers;
 using Arnis.Sinks;
 
@@ -29,11 +30,11 @@ namespace Arnis
                 }
                 );
 
-                //settings.Add("wf", @"C:\Users\rddag\DSS\imagestore");
-                //settings.Add("sf", @"C:\Users\rddag\Desktop\stackreport.imagestore.csv");
+                //settings.Add("wf", @"C:\Users\rddag\DSS");
+                //settings.Add("sf", @"C:\Users\rddag\Desktop\stackreport.dss.csv");
 
-                settings.Add("wf", @"C:\Users\rddag\Desktop\GitHub\arnis");
-                settings.Add("sf", @"C:\Users\rddag\Desktop\stackreport.arnis.csv");
+                //settings.Add("wf", @"C:\Users\rddag\Desktop\GitHub\arnis");
+                //settings.Add("sf", @"C:\Users\rddag\Desktop\stackreport.arnis.csv");
 
                 string wf = settings.SingleOrDefault(s => s.Key == "wf").Value;
                 if (null == wf)

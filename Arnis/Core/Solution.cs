@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Arnis
+namespace Arnis.Core
 {
     public class Solution
     {
@@ -8,6 +8,6 @@ namespace Arnis
         public string Location { get; set; }
 
         public List<Project> Projects { get; set; } = new List<Project>();
-        public List<SolutionDependency> Dependencies { get; set; } = new List<SolutionDependency>();
+        public List<Dependency> Dependencies { get; set; } = new List<Dependency>();
     }
 }

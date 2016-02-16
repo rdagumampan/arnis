@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Arnis.Core;
 
 namespace Arnis.Sinks
 {
@@ -20,18 +21,18 @@ namespace Arnis.Sinks
         public void Flush()
         {
             var report = new StringBuilder();
-            report.AppendLine("Component, Version, SolutionName, SolutionLocation, ProjectName, ProjectLocation");
+            report.AppendLine("Dependency, Version, SolutionName, ProjectName, SolutionLocation, ProjectLocation");
 
             var solutionDependencies = _reports
                 .SelectMany(s => s.Dependencies
                 .Select(sd => new
                 {
-                    SolutionName = s.Name,
-                    SolutionLocation = s.Location,
-                    ProjectName = string.Empty,
-                    ProjectLocation = string.Empty,
                     Name = sd.Name,
                     Version = sd.Version,
+                    SolutionName = s.Name,
+                    ProjectName = string.Empty,
+                    SolutionLocation = s.Location,
+                    ProjectLocation = string.Empty,
                 }));
 
             var projectDependencies = _reports
@@ -39,12 +40,12 @@ namespace Arnis.Sinks
                     .SelectMany(p => p.Dependencies
                         .Select(pd => new
                         {
-                            SolutionName = s.Name,
-                            SolutionLocation = s.Location,
-                            ProjectName = p.Name,
-                            ProjectLocation = p.Location,
                             Name = pd.Name,
                             Version = pd.Version,
+                            SolutionName = s.Name,
+                            ProjectName = p.Name,
+                            SolutionLocation = s.Location,
+                            ProjectLocation = p.Location,
                         })));
 
             var consolidatedDependencies = solutionDependencies.Union(projectDependencies);
@@ -62,7 +63,7 @@ namespace Arnis.Sinks
                         gv.ToList()
                             .ForEach(r =>
                             {
-                                report.AppendFormat("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",{6}", r.Name, r.Version, r.SolutionName, r.SolutionLocation, r.ProjectName, r.ProjectLocation, Environment.NewLine);
+                                report.AppendFormat("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",{6}", r.Name, r.Version, r.SolutionName, r.ProjectName, r.SolutionLocation, r.ProjectLocation, Environment.NewLine);
                             });
                     });
                 });

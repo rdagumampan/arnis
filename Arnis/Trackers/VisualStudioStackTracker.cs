@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Arnis.Core;
 
 namespace Arnis.Trackers
 {
@@ -55,7 +55,7 @@ namespace Arnis.Trackers
                         Location = f
                     };
 
-                    solution.Dependencies.Add(new SolutionDependency
+                    solution.Dependencies.Add(new Dependency
                     {
                         Name = Name,
                         Version = versionMap.ProductVersion
@@ -79,7 +79,7 @@ namespace Arnis.Trackers
                         Location = f
                     };
 
-                    solution.Dependencies.Add(new SolutionDependency
+                    solution.Dependencies.Add(new Dependency
                     {
                         Name = Name,
                         Version = versionMap.ProductVersion
@@ -138,9 +138,9 @@ namespace Arnis.Trackers
         //VS2012 - VS2015 uses the same solution file version (visa MSBUILD parser) which is 12.00
         //made this obsolete since using the first line in SLN file returns same result but without MSBUILD dependency
         [Obsolete]
-        private List<SolutionDependency> TrackWithMsBuild(List<string> files)
+        private List<Dependency> TrackWithMsBuild(List<string> files)
         {
-            List<SolutionDependency> report = new List<SolutionDependency>();
+            List<Dependency> report = new List<Dependency>();
 
             files.ForEach(f =>
             {
@@ -169,7 +169,7 @@ namespace Arnis.Trackers
 
                 if (null != versionInfo)
                 {
-                    report.Add(new SolutionDependency
+                    report.Add(new Dependency
                     {
                         Name = Name,
                         Version = versionInfo.ProductVersion,

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Arnis
+namespace Arnis.Core
 {
     public class StackReport
     {

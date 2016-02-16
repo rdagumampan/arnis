@@ -1,6 +1,6 @@
-﻿namespace Arnis
+﻿namespace Arnis.Core
 {
-    public class ProjectDependency
+    public class Dependency
     {
         public string Name { get; set; }
         public string Version { get; set; }

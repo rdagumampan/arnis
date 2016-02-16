@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Arnis;
 
-namespace Arnis
+namespace Arnis.Core
 {
     public interface IStackTracker
     {

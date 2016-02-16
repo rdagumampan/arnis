@@ -7,8 +7,8 @@
     <ProjectGuid>{BCE1249A-8298-4F45-A364-7D83FD0781F8}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Winterfern</RootNamespace>
-    <AssemblyName>winterfern</AssemblyName>
+    <RootNamespace>Arnis</RootNamespace>
+    <AssemblyName>arnis</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -33,9 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Build">
-      <HintPath>lib\Microsoft.Build.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -46,16 +43,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IStackTracker.cs" />
+    <Compile Include="Core\IStackTracker.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Project.cs" />
-    <Compile Include="ProjectDependency.cs" />
+    <Compile Include="Core\Project.cs" />
+    <Compile Include="Core\Dependency.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sinks\CsvStackReportSink.cs" />
-    <Compile Include="IStackReportSink.cs" />
-    <Compile Include="Solution.cs" />
-    <Compile Include="SolutionDependency.cs" />
-    <Compile Include="StackReport.cs" />
+    <Compile Include="Core\IStackReportSink.cs" />
+    <Compile Include="Core\Solution.cs" />
+    <Compile Include="Core\StackReport.cs" />
     <Compile Include="Trackers\FrameworkVersionTracker.cs" />
     <Compile Include="Trackers\ReferencedAssembliesTracker.cs" />
     <Compile Include="Trackers\VisualStudioStackTracker.cs" />
