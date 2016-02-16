@@ -27,7 +27,7 @@ Example (with skip file):
     c:\arnis\packages
 
 ####How it works
-Arnis scans your target workspace folder and perform analysis of solutions and projects. Then the tracker's results are consolidated to form a dependency tree .
+Arnis scans the target workspace folder and perform analysis of solutions and projects. Then the tracker's results are consolidated to form a dependency tree .
 
 - **VisualStudioTracker**
 Scans working folder for solution files and identify the version of Visual Studio used.
@@ -39,10 +39,10 @@ Sinks saves the result into specific format or destination. Currently, only CSV 
 - **CsvStackReportSink**
 Save the report into CSV file
 
-![](https://rdagumampan.files.wordpress.com/2016/02/winterfernresult.png)
+![](https://rdagumampan.files.wordpress.com/2016/02/arnisresult.png)
 
 ####Disclaimer
-Arnis does not guarantee 100% reliability. This is not runtime dependency tracer. If you need more sophisticated runtime analysis I recommend [Dependency Walker](http://www.dependencywalker.com/), [ILSPy](https://github.com/icsharpcode/ILSpy), [NDepend](http://www.ndepend.com/) or [Reflector](http://www.red-gate.com/products/dotnet-development/reflector/) tools.
+Arnis does not guarantee 100% reliability. This is not a runtime dependency tracer. For more sophisticated runtime analysis, consider [Dependency Walker](http://www.dependencywalker.com/), [ILSPy](https://github.com/icsharpcode/ILSpy), [NDepend](http://www.ndepend.com/) or [Reflector](http://www.red-gate.com/products/dotnet-development/reflector/) tools.
 
 ####Future
 - support tracking web projects dependencies
