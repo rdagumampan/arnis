@@ -29,6 +29,12 @@ namespace Winterfern
                 }
                 );
 
+                //settings.Add("wf", @"C:\Users\rddag\DSS\imagestore");
+                //settings.Add("sf", @"C:\Users\rddag\Desktop\stackreport.imagestore.csv");
+
+                settings.Add("wf", @"C:\Users\rddag\Desktop\GitHub\winterfern");
+                settings.Add("sf", @"C:\Users\rddag\Desktop\stackreport.winterfern.csv");
+
                 string wf = settings.SingleOrDefault(s => s.Key == "wf").Value;
                 if (null == wf)
                 {
