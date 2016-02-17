@@ -13,7 +13,7 @@ namespace Arnis
 {
     static class Program
     {
-        //arnis /wf:c:\users\rddag\dss /sf:c:\test.csv
+        //arnis /wf:"c:\users\rddag\dss" /sf:"c:\test.csv"
         static void Main(string[] args)
         {
             try
@@ -23,18 +23,15 @@ namespace Arnis
                     regex.Match(s)).Where(m => m.Success)
                     .ToDictionary(m => m.Groups[1].Value, m => m.Groups[2].Value);
 
-                Console.WriteLine("Running Arnis on ff settings:");
+                Console.WriteLine("Running Arnis.NET on ff settings:");
                 settings.ToList().ForEach(s =>
                 {
                     Console.WriteLine("\t" + s.Key + "," + s.Value);
                 }
                 );
 
-                //settings.Add("wf", @"C:\Users\rddag\DSS");
-                //settings.Add("sf", @"C:\Users\rddag\Desktop\stackreport.dss.csv");
-
                 //settings.Add("wf", @"C:\Users\rddag\Desktop\GitHub\arnis");
-                //settings.Add("sf", @"C:\Users\rddag\Desktop\stackreport.arnis.csv");
+                //settings.Add("sf", @"C:\Users\rddag\Desktop\teckstack.arnis.csv");
 
                 string wf = settings.SingleOrDefault(s => s.Key == "wf").Value;
                 if (null == wf)
@@ -114,14 +111,15 @@ namespace Arnis
                 stackSink.Flush();
 
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Done! Check " + sf);
+                Console.WriteLine();
+                Console.WriteLine("Alright, we're done!\nCheck out: " + sf);
                 Console.ForegroundColor = ConsoleColor.White;
             }
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine();
-                Console.WriteLine("Error running Arnis. \n" + ex.Message);
+                Console.WriteLine("Arnis.NET breaks ;(. \n" + ex.Message);
                 Console.ForegroundColor = ConsoleColor.White;
             }
 

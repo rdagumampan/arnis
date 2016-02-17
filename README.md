@@ -1,5 +1,5 @@
 ####Arnis 
-**Arnis** is a no-brainer dependency tracker for .NET applications using elementary parsing algorithm. 
+**Arnis.NET** is a no-brainer dependency tracker for .NET applications using elementary parsing algorithm. 
 
 ![](https://ci.appveyor.com/api/projects/status/github/rdagumampan/arnis?branch=master&svg=true)
 
@@ -27,7 +27,7 @@ Example (with skip file):
     c:\arnis\packages
 
 ####How it works
-Arnis scans the target workspace folder and perform analysis of solutions and projects. Then the tracker's results are consolidated to form a dependency tree .
+Arnis.NET scans the target workspace folder and perform analysis of solutions and projects. Then the tracker's results are consolidated to form a dependency tree .
 
 - **VisualStudioTracker**
 Scans working folder for solution files and identify the version of Visual Studio used.
@@ -42,7 +42,7 @@ Save the report into CSV file
 ![](https://rdagumampan.files.wordpress.com/2016/02/arnisresult.png)
 
 ####Disclaimer
-Arnis does not guarantee 100% reliability. This is not a runtime dependency tracer. For more sophisticated runtime analysis, consider [Dependency Walker](http://www.dependencywalker.com/), [ILSPy](https://github.com/icsharpcode/ILSpy), [NDepend](http://www.ndepend.com/) or [Reflector](http://www.red-gate.com/products/dotnet-development/reflector/) tools.
+Arnis.NET does not guarantee 100% reliability. This is not a runtime dependency tracer. For more sophisticated runtime analysis, consider [Dependency Walker](http://www.dependencywalker.com/), [ILSPy](https://github.com/icsharpcode/ILSpy), [NDepend](http://www.ndepend.com/) or [Reflector](http://www.red-gate.com/products/dotnet-development/reflector/) tools.
 
 ####Future
 - support tracking web projects dependencies
