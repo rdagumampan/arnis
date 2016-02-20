@@ -8,7 +8,7 @@ using Arnis.Core;
 
 namespace Arnis.Trackers
 {
-    public class ReferencedAssembliesTracker : IStackTracker
+    public class ReferencedAssembliesTracker : ITracker
     {
         private readonly string _workingDirectory;
         public string Name { get; } = "ReferencedAssembliesTracker";
@@ -19,9 +19,9 @@ namespace Arnis.Trackers
             _workingDirectory = workingDirectory;
         }
 
-        public StackReport Run()
+        public TrackerResult Run()
         {
-            var stackReport = new StackReport();
+            var stackReport = new TrackerResult();
 
             var solutionFiles = Directory.EnumerateFiles(_workingDirectory, "*.sln", SearchOption.AllDirectories).ToList();
 

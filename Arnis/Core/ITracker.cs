@@ -2,10 +2,10 @@
 
 namespace Arnis.Core
 {
-    public interface IStackTracker
+    public interface ITracker
     {
         string Name { get;  }
         string Description { get; }
-        StackReport Run();
+        TrackerResult Run();
     }
 }

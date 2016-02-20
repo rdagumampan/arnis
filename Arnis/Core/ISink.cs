@@ -1,6 +1,6 @@
 ﻿namespace Arnis.Core
 {
-    interface IStackReportSink
+    interface ISink
     {
         void Flush();
     }

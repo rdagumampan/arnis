@@ -19,12 +19,12 @@ namespace Arnis.Trackers
     //http://pascoal.net/2011/05/getting-visual-studio-version-of-a-solution-file/
     //https://en.wikipedia.org/wiki/Microsoft_Visual_Studio
     //https://regex101.com/
-    public class VisualStudioStackTracker : IStackTracker
+    public class VisualStudioTracker : ITracker
     {
         private readonly string _workingDirectory;
         private readonly List<string> _skipList;
 
-        public VisualStudioStackTracker(string workingDirectory, List<string> skipList)
+        public VisualStudioTracker(string workingDirectory, List<string> skipList)
         {
             _workingDirectory = workingDirectory;
             _skipList = skipList;
@@ -33,9 +33,9 @@ namespace Arnis.Trackers
         public string Name { get; } = "VisualStudio";
         public string Description { get; } = "Track all projects that used Microsoft Visual Studio IDE.";
 
-        public StackReport Run()
+        public TrackerResult Run()
         {
-            var stackReport = new StackReport();
+            var stackReport = new TrackerResult();
 
             var solutionFiles = Directory.EnumerateFiles(_workingDirectory, "*.sln", SearchOption.AllDirectories).ToList();
 

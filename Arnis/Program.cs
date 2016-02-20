@@ -72,7 +72,7 @@ namespace Arnis
                 Console.WriteLine("walk around, this may take some time...");
 
                 //TODO: make this dynamic by reflecting all IStackTracker
-                var vsTracker = new VisualStudioStackTracker(wf, skipList);
+                var vsTracker = new VisualStudioTracker(wf, skipList);
                 var vsStackReport = Task.Run(() => vsTracker.Run()).Result;
 
                 var referenceTracker = new ReferencedAssembliesTracker(wf);
@@ -83,7 +83,7 @@ namespace Arnis
 
                 //consolidate
                 //TODO: make this dynamic by reflecting all IStackReportSink
-                var fullStackReport = new StackReport
+                var fullStackReport = new TrackerResult
                 {
                     Results = vsStackReport.Results
                         .Union(refStackReport.Results)
@@ -107,7 +107,7 @@ namespace Arnis
                     Console.ForegroundColor = ConsoleColor.White;
                 }
 
-                var stackSink = new CsvStackReportSink(sf, fullStackReport.Results);
+                var stackSink = new CsvSink(sf, fullStackReport.Results);
                 stackSink.Flush();
 
                 Console.ForegroundColor = ConsoleColor.Green;

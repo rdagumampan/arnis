@@ -7,7 +7,7 @@ using Arnis.Core;
 
 namespace Arnis.Trackers
 {
-    public class FrameworkVersionTracker: IStackTracker
+    public class FrameworkVersionTracker: ITracker
     {
         private readonly string _workingDirectory;
         public string Name { get; } = "FrameworkVersionTracker";
@@ -18,9 +18,9 @@ namespace Arnis.Trackers
             _workingDirectory = workingDirectory;
         }
 
-        public StackReport Run()
+        public TrackerResult Run()
         {
-            var stackReport = new StackReport();
+            var stackReport = new TrackerResult();
             var solutionFiles = Directory.EnumerateFiles(_workingDirectory, "*.sln", SearchOption.AllDirectories).ToList();
 
             solutionFiles.ForEach(s =>

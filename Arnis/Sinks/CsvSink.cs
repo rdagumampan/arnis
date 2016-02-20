@@ -7,12 +7,12 @@ using Arnis.Core;
 
 namespace Arnis.Sinks
 {
-    public class CsvStackReportSink : IStackReportSink
+    public class CsvSink : ISink
     {
         private readonly string _fileName;
         private readonly List<Solution> _reports;
 
-        public CsvStackReportSink(string fileName, List<Solution> reports)
+        public CsvSink(string fileName, List<Solution> reports)
         {
             _fileName = fileName;
             _reports = reports;
