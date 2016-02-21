@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -8,19 +9,17 @@ namespace Arnis.Core.Trackers
 {
     public class FrameworkVersionTracker: ITracker
     {
-        private readonly string _workingDirectory;
         public string Name { get; } = "FrameworkVersionTracker";
         public string Description { get; } = "Tracks target framework version for each project";
 
-        public FrameworkVersionTracker(string workingDirectory)
+        public FrameworkVersionTracker()
         {
-            _workingDirectory = workingDirectory;
         }
 
-        public TrackerResult Run()
+        public TrackerResult Run(string workspace, List<string> skipList)
         {
             var stackReport = new TrackerResult();
-            var solutionFiles = Directory.EnumerateFiles(_workingDirectory, "*.sln", SearchOption.AllDirectories).ToList();
+            var solutionFiles = Directory.EnumerateFiles(workspace, "*.sln", SearchOption.AllDirectories).ToList();
 
             solutionFiles.ForEach(s =>
             {

@@ -1,7 +1,7 @@
 ﻿namespace Arnis.Core
 {
-    interface ISink
+    public interface ISink
     {
-        void Flush();
+        void Flush(Workspace workspace);
     }
 }

@@ -20,26 +20,22 @@ namespace Arnis.Core.Trackers
     //https://regex101.com/
     public class VisualStudioTracker : ITracker
     {
-        private readonly string _workingDirectory;
-        private readonly List<string> _skipList;
 
-        public VisualStudioTracker(string workingDirectory, List<string> skipList)
+        public VisualStudioTracker()
         {
-            _workingDirectory = workingDirectory;
-            _skipList = skipList;
         }
 
         public string Name { get; } = "VisualStudio";
         public string Description { get; } = "Track all projects that used Microsoft Visual Studio IDE.";
 
-        public TrackerResult Run()
+        public TrackerResult Run(string workspace, List<string> skipList)
         {
             var stackReport = new TrackerResult();
 
-            var solutionFiles = Directory.EnumerateFiles(_workingDirectory, "*.sln", SearchOption.AllDirectories).ToList();
+            var solutionFiles = Directory.EnumerateFiles(workspace, "*.sln", SearchOption.AllDirectories).ToList();
 
             //skip all files within the skip list
-            var solutionFilesStage1 = solutionFiles.Where(f => !_skipList.Exists(f.Contains))
+            var solutionFilesStage1 = solutionFiles.Where(f => !skipList.Exists(f.Contains))
                 .ToList();
 
             //tracks all with latest versions from 2013 - 2015

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,21 +7,12 @@ namespace Arnis.Core.Sinks
 {
     public class CsvSink : ISink
     {
-        private readonly string _fileName;
-        private readonly List<Solution> _reports;
-
-        public CsvSink(string fileName, List<Solution> reports)
-        {
-            _fileName = fileName;
-            _reports = reports;
-        }
-
-        public void Flush()
+        public void Flush(Workspace workspace)
         {
             var report = new StringBuilder();
             report.AppendLine("Dependency, Version, SolutionName, ProjectName, SolutionLocation, ProjectLocation");
 
-            var solutionDependencies = _reports
+            var solutionDependencies = workspace.Solutions
                 .SelectMany(s => s.Dependencies
                 .Select(sd => new
                 {
@@ -34,7 +24,7 @@ namespace Arnis.Core.Sinks
                     ProjectLocation = string.Empty,
                 }));
 
-            var projectDependencies = _reports
+            var projectDependencies = workspace.Solutions
                 .SelectMany(s => s.Projects
                     .SelectMany(p => p.Dependencies
                         .Select(pd => new
@@ -67,7 +57,13 @@ namespace Arnis.Core.Sinks
                     });
                 });
 
-            File.WriteAllText(_fileName, report.ToString(), Encoding.UTF8);
+            string fileName = $"techstackreport.{workspace.Name.ToLower()}.csv";
+            File.WriteAllText(fileName, report.ToString(), Encoding.UTF8);
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine();
+            Console.WriteLine("Alright, we're done!\nCheck out: " + fileName);
+            Console.ForegroundColor = ConsoleColor.White;
         }
     }
 }

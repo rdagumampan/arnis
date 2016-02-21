@@ -9,20 +9,18 @@ namespace Arnis.Core.Trackers
 {
     public class ReferencedAssembliesTracker : ITracker
     {
-        private readonly string _workingDirectory;
         public string Name { get; } = "ReferencedAssembliesTracker";
         public string Description { get; } = "Tracks all referenced assemblies in a cs project.";
 
-        public ReferencedAssembliesTracker(string workingDirectory)
+        public ReferencedAssembliesTracker()
         {
-            _workingDirectory = workingDirectory;
         }
 
-        public TrackerResult Run()
+        public TrackerResult Run(string workspace, List<string> skipList)
         {
             var stackReport = new TrackerResult();
 
-            var solutionFiles = Directory.EnumerateFiles(_workingDirectory, "*.sln", SearchOption.AllDirectories).ToList();
+            var solutionFiles = Directory.EnumerateFiles(workspace, "*.sln", SearchOption.AllDirectories).ToList();
 
             solutionFiles.ForEach(s=>
             {

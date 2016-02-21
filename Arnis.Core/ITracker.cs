@@ -1,4 +1,5 @@
-﻿using Arnis;
+﻿using System.Collections.Generic;
+using Arnis;
 
 namespace Arnis.Core
 {
@@ -6,6 +7,7 @@ namespace Arnis.Core
     {
         string Name { get;  }
         string Description { get; }
-        TrackerResult Run();
+
+        TrackerResult Run(string workspace, List<string> skipList);
     }
 }

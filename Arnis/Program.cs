@@ -2,18 +2,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Arnis.Core;
-using Arnis.Core.Sinks;
-using Arnis.Core.Trackers;
 
 namespace Arnis
 {
     static class Program
     {
-        //arnis /wf:"c:\users\rddag\dss" /sf:"c:\test.csv"
+        //arnis /ws:"c:\github\arnis" /sf:"c:\skip.data"
         static void Main(string[] args)
         {
             try
@@ -30,26 +27,22 @@ namespace Arnis
                 }
                 );
 
-                //settings.Add("wf", @"C:\Users\rddag\Desktop\GitHub\arnis");
-                //settings.Add("sf", @"C:\Users\rddag\Desktop\teckstack.arnis.csv");
+                settings.Add("ws", @"C:\Users\rddag\Desktop\GitHub\arnis");
+                settings.Add("sf", @"C:\Users\rddag\Desktop\teckstack.arnis.csv");
 
-                string wf = settings.SingleOrDefault(s => s.Key == "wf").Value;
-                if (null == wf)
+                //validate working folder /ws
+                string ws = settings.SingleOrDefault(s => s.Key == "ws").Value;
+                if (null == ws)
                 {
-                    throw new ArgumentException("Missing parameter", "wf");
+                    throw new ArgumentException("Missing parameter", "ws");
                 }
 
+                //validate skip folder /sf
+                var skipList = new List<string>();
                 string sf = settings.SingleOrDefault(s => s.Key == "sf").Value;
                 if (null == sf)
                 {
-                    throw new ArgumentException("Missing parameter", "sf");
-                }
-
-                var skipList = new List<string>();
-                string skf = settings.SingleOrDefault(s => s.Key == "skf").Value;
-                if (null == skf)
-                {
-                    Console.WriteLine("No skip file (skip.data) defined. /skf:<skipfile>");
+                    Console.WriteLine("No skip file (skip.data) defined. /sf:<skipfile>");
                 }
                 else
                 {
@@ -60,7 +53,9 @@ namespace Arnis
 
                         if (!skipList.Any())
                         {
+                            Console.ForegroundColor = ConsoleColor.Yellow;
                             Console.WriteLine("Warning: Skip file is empty, but it's ok.");
+                            Console.ForegroundColor = ConsoleColor.White;
                         }
                     }
                     else
@@ -71,49 +66,11 @@ namespace Arnis
 
                 Console.WriteLine("walk around, this may take some time...");
 
-                //TODO: make this dynamic by reflecting all IStackTracker
-                var vsTracker = new VisualStudioTracker(wf, skipList);
-                var vsStackReport = Task.Run(() => vsTracker.Run()).Result;
+                //run all trackers
+                var trackerResult = TrackDependencies(ws, skipList);
 
-                var referenceTracker = new ReferencedAssembliesTracker(wf);
-                var refStackReport = Task.Run(() => referenceTracker.Run()).Result;
-
-                var frameworkVersionTracker = new FrameworkVersionTracker(wf);
-                var frameoworkVersionReport = Task.Run(() => frameworkVersionTracker.Run()).Result;
-
-                //consolidate
-                //TODO: make this dynamic by reflecting all IStackReportSink
-                var fullStackReport = new TrackerResult
-                {
-                    Results = vsStackReport.Results
-                        .Union(refStackReport.Results)
-                        .Union(frameoworkVersionReport.Results)
-                        .ToList(),
-                    Errors = vsStackReport.Errors
-                        .Union(refStackReport.Errors)
-                        .Union(frameoworkVersionReport.Errors)
-                        .ToList()
-                };
-
-                if (fullStackReport.Errors.ToList().Any())
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine();
-                    Console.WriteLine("Unknown files found: {0}", fullStackReport.Errors.Count());
-                    fullStackReport.Errors.ForEach(f =>
-                    {
-                        Console.WriteLine("\t{0}", f);
-                    });
-                    Console.ForegroundColor = ConsoleColor.White;
-                }
-
-                var stackSink = new CsvSink(sf, fullStackReport.Results);
-                stackSink.Flush();
-
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine();
-                Console.WriteLine("Alright, we're done!\nCheck out: " + sf);
-                Console.ForegroundColor = ConsoleColor.White;
+                //run all sinks
+                PublishDependencies(trackerResult);
             }
             catch (Exception ex)
             {
@@ -122,8 +79,62 @@ namespace Arnis
                 Console.WriteLine("Arnis.NET breaks ;(. \n" + ex.Message);
                 Console.ForegroundColor = ConsoleColor.White;
             }
-
+            
             Console.Read();
         }
+
+        private static TrackerResult TrackDependencies(string workspace, List<string> skipList)
+        {
+            var trackers = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(s => s.GetTypes())
+                .Where(p => typeof (ITracker).IsAssignableFrom(p) && !p.IsInterface);
+
+            var trackerTasks = trackers.Select(t =>
+            {
+                var tracker = Activator.CreateInstance(t) as ITracker;
+                return Task.Factory.StartNew(() => tracker.Run(workspace, skipList));
+            });
+
+            Task.WaitAll(trackerTasks.ToArray());
+
+            var trackerResultRaw = trackerTasks.Select(t => t.Result);
+            var trackerResult = new TrackerResult
+            {
+                Results = trackerResultRaw.SelectMany(t => t.Results).ToList(),
+                Errors = trackerResultRaw.SelectMany(t => t.Errors).ToList()
+            };
+
+            if (trackerResult.Errors.ToList().Any())
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Unknown files found: {0}", trackerResult.Errors.Count());
+                trackerResult.Errors.ForEach(f => { Console.WriteLine("\t{0}", f); });
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            return trackerResult;
+        }
+
+        private static void PublishDependencies(TrackerResult trackerResult)
+        {
+            var workspace = new Workspace
+            {
+                Name = "arnisws",
+                Description = "test workspace",
+                Owners = new List<string> { "everyone" },
+                Solutions = trackerResult.Results
+            };
+
+            var sinks = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(s => s.GetTypes())
+                .Where(p => typeof(ISink).IsAssignableFrom(p) && !p.IsInterface);
+
+            var sinkTasks = sinks.Select(t =>
+            {
+                var tracker = Activator.CreateInstance(t) as ISink;
+                return Task.Factory.StartNew(() => tracker.Flush(workspace));
+            });
+
+            Task.WaitAll(sinkTasks.ToArray());
+       }
     }
 }
