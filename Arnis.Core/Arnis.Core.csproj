@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{BCE1249A-8298-4F45-A364-7D83FD0781F8}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{15DB4025-71B3-4651-9B34-C25D1BB1593B}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Arnis</RootNamespace>
-    <AssemblyName>arnis</AssemblyName>
+    <RootNamespace>Arnis.Core</RootNamespace>
+    <AssemblyName>Arnis.Core</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -43,18 +40,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Dependency.cs" />
+    <Compile Include="ISink.cs" />
+    <Compile Include="ITracker.cs" />
+    <Compile Include="ITrackerResult.cs" />
+    <Compile Include="Project.cs" />
+    <Compile Include="ProjectDependency.cs" />
+    <Compile Include="Solution.cs" />
+    <Compile Include="SolutionDependency.cs" />
+    <Compile Include="TrackerResult.cs" />
+    <Compile Include="Workspace.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sinks\CsvSink.cs" />
+    <Compile Include="Trackers\FrameworkVersionTracker.cs" />
+    <Compile Include="Trackers\ReferencedAssembliesTracker.cs" />
+    <Compile Include="Trackers\VisualStudioTracker.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <None Include="Skip.data" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Arnis.Core\Arnis.Core.csproj">
-      <Project>{15DB4025-71B3-4651-9B34-C25D1BB1593B}</Project>
-      <Name>Arnis.Core</Name>
-    </ProjectReference>
+    <None Include="Diagram.Core.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -4,9 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Arnis.Core;
 
-namespace Arnis.Trackers
+namespace Arnis.Core.Trackers
 {
     public class VsVersionMap
     {

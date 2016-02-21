@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using Arnis.Core;
 
-namespace Arnis.Api
+namespace Arnis.Core
 {
     public class Workspace
     {

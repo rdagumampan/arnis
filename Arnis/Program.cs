@@ -6,8 +6,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Arnis.Core;
-using Arnis.Trackers;
-using Arnis.Sinks;
+using Arnis.Core.Sinks;
+using Arnis.Core.Trackers;
 
 namespace Arnis
 {

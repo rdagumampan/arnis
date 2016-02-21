@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		ReadMe.md = ReadMe.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arnis.Core", "Arnis.Core\Arnis.Core.csproj", "{15DB4025-71B3-4651-9B34-C25D1BB1593B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{9F88F207-0AA5-45DB-8039-96A3B21ABFB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F88F207-0AA5-45DB-8039-96A3B21ABFB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F88F207-0AA5-45DB-8039-96A3B21ABFB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15DB4025-71B3-4651-9B34-C25D1BB1593B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15DB4025-71B3-4651-9B34-C25D1BB1593B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15DB4025-71B3-4651-9B34-C25D1BB1593B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15DB4025-71B3-4651-9B34-C25D1BB1593B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

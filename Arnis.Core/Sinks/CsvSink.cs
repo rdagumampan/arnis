@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Arnis.Core;
 
-namespace Arnis.Sinks
+namespace Arnis.Core.Sinks
 {
     public class CsvSink : ISink
     {
