@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Arnis.Core;
@@ -85,7 +86,16 @@ namespace Arnis
 
         private static TrackerResult TrackDependencies(string workspace, List<string> skipList)
         {
-            var trackers = AppDomain.CurrentDomain.GetAssemblies()
+            string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var assemblies = Directory.GetFiles(path, "*.dll")
+                .Where(f =>
+                    Path.GetFileNameWithoutExtension(f).Contains(".Core")
+                    || Path.GetFileNameWithoutExtension(f).Contains(".Trackers")
+                    )
+                .Select(a => Assembly.LoadFile(a));
+
+
+            var trackers = assemblies
                 .SelectMany(s => s.GetTypes())
                 .Where(p => typeof (ITracker).IsAssignableFrom(p) && !p.IsInterface);
 
@@ -124,7 +134,15 @@ namespace Arnis
                 Solutions = trackerResult.Results
             };
 
-            var sinks = AppDomain.CurrentDomain.GetAssemblies()
+            string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var assemblies = Directory.GetFiles(path, "*.dll")
+                .Where(f=> 
+                    Path.GetFileNameWithoutExtension(f).Contains(".Core")
+                    || Path.GetFileNameWithoutExtension(f).Contains(".Sinks")
+                    )
+                .Select(a => Assembly.LoadFile(a));
+
+            var sinks = assemblies
                 .SelectMany(s => s.GetTypes())
                 .Where(p => typeof(ISink).IsAssignableFrom(p) && !p.IsInterface);
 
