@@ -20,16 +20,25 @@ namespace Arnis.Sinks
 
         public void Flush(Workspace workspace)
         {
+            ConsoleEx.Info($"Running sink: {this.GetType().Name}");
+
             var serviceClient = new RestClient(serviceUri);
 
-            var serviceRequest = new RestRequest(@"api\workspaces", Method.POST);
-            serviceRequest.AddJsonBody(workspace);
-            serviceRequest.RequestFormat = DataFormat.Json;
+            var request = new RestRequest(@"api\workspace", Method.POST);
+            request.AddJsonBody(workspace);
+            request.RequestFormat = DataFormat.Json;
 
-            var restResponse = serviceClient.Post(serviceRequest);
-            if(restResponse.StatusCode == HttpStatusCode.Created)
+            var response = serviceClient.Post(request);
+            if(response.StatusCode == HttpStatusCode.Created)
             {
-                Console.WriteLine("Workspace analysis published.");
+                ConsoleEx.Ok("Workspace analysis report published.");
+                string location = response.Headers.FirstOrDefault(h=> h.Name == "Location").Value.ToString().ToLower();
+                ConsoleEx.Ok($"Check out {location}");
+            }
+            else
+            {
+                ConsoleEx.Error($"Workspace not published to target sink.");
+                ConsoleEx.Error($"Status: {response.StatusCode}, Response: {response.Content}");
             }
         }
     }

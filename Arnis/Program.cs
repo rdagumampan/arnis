@@ -21,10 +21,10 @@ namespace Arnis
                     regex.Match(s)).Where(m => m.Success)
                     .ToDictionary(m => m.Groups[1].Value, m => m.Groups[2].Value);
 
-                Console.WriteLine("Running Arnis.NET on ff settings:");
+                ConsoleEx.Info("Running Arnis.NET on ff settings:");
                 settings.ToList().ForEach(s =>
                 {
-                    Console.WriteLine("\t" + s.Key + "," + s.Value);
+                    ConsoleEx.Info($"\t{s.Key}: {s.Value}");
                 }
                 );
 
@@ -43,7 +43,7 @@ namespace Arnis
                 string sf = settings.SingleOrDefault(s => s.Key == "sf").Value;
                 if (null == sf)
                 {
-                    Console.WriteLine("No skip file (skip.data) defined. /sf:<skipfile>");
+                    ConsoleEx.Warn("No skip file (skip.data) defined. /sf:<skipfile>");
                 }
                 else
                 {
@@ -54,34 +54,27 @@ namespace Arnis
 
                         if (!skipList.Any())
                         {
-                            Console.ForegroundColor = ConsoleColor.Yellow;
-                            Console.WriteLine("Warning: Skip file is empty, but it's ok.");
-                            Console.ForegroundColor = ConsoleColor.White;
+                            ConsoleEx.Warn("Warning: Skip file is empty, but it's ok.");
                         }
                     }
                     else
                     {
-                        Console.WriteLine("Warning: Skip file doesn't exists, but we'll continue anyway");
+                        ConsoleEx.Warn("Warning: Skip file doesn't exists, but we'll continue anyway");
                     }
                 }
 
-                Console.WriteLine("walk around, this may take some time...");
+                ConsoleEx.Info("walk around, this may take some time...");
 
                 //run all trackers
                 var trackerResult = TrackDependencies(ws, skipList);
 
                 //run all sinks
-                PublishDependencies(trackerResult);
+                SinkDependencies(trackerResult);
             }
             catch (Exception ex)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine();
-                Console.WriteLine("Arnis.NET breaks ;(. \n" + ex.Message);
-                Console.ForegroundColor = ConsoleColor.White;
-            }
-            
-            Console.Read();
+                ConsoleEx.Error("Arnis.NET breaks ;(. \n" + ex.Message);
+            }            
         }
 
         private static TrackerResult TrackDependencies(string workspace, List<string> skipList)
@@ -116,21 +109,17 @@ namespace Arnis
 
             if (trackerResult.Errors.ToList().Any())
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Unknown files found: {0}", trackerResult.Errors.Count());
-                trackerResult.Errors.ForEach(f => { Console.WriteLine("\t{0}", f); });
-                Console.ForegroundColor = ConsoleColor.White;
+                ConsoleEx.Error($"Unknown files found: {trackerResult.Errors.Count()}");
+                trackerResult.Errors.ForEach(f => { ConsoleEx.Error($"\t{f}"); });
             }
             return trackerResult;
         }
 
-        private static void PublishDependencies(TrackerResult trackerResult)
+        private static void SinkDependencies(TrackerResult trackerResult)
         {
             var workspace = new Workspace
             {
                 Name = "arnisws",
-                Description = "test workspace",
-                Owners = new List<string> { "everyone" },
                 Solutions = trackerResult.Results
             };
 

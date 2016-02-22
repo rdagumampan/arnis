@@ -9,6 +9,8 @@ namespace Arnis.Core.Sinks
     {
         public void Flush(Workspace workspace)
         {
+            ConsoleEx.Info($"Running sink: {this.GetType().Name}");
+
             var report = new StringBuilder();
             report.AppendLine("Dependency, Version, SolutionName, ProjectName, SolutionLocation, ProjectLocation");
 
@@ -60,10 +62,7 @@ namespace Arnis.Core.Sinks
             string fileName = $"techstackreport.{workspace.Name.ToLower()}.csv";
             File.WriteAllText(fileName, report.ToString(), Encoding.UTF8);
 
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine();
-            Console.WriteLine("Alright, we're done!\nCheck out: " + fileName);
-            Console.ForegroundColor = ConsoleColor.White;
+            ConsoleEx.Ok("Alright, we're done!\nCheck out: " + fileName);
         }
     }
 }

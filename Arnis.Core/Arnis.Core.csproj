@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsoleEx.cs" />
     <Compile Include="Dependency.cs" />
     <Compile Include="ISink.cs" />
     <Compile Include="ITracker.cs" />
