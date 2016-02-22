@@ -28,8 +28,8 @@ namespace Arnis
                 }
                 );
 
-                settings.Add("ws", @"C:\Users\rddag\Desktop\GitHub\arnis");
-                settings.Add("sf", @"C:\Users\rddag\Desktop\teckstack.arnis.csv");
+                //settings.Add("ws", @"C:\Users\rddag\Desktop\GitHub\arnis");
+                //settings.Add("sf", @"C:\Users\rddag\Desktop\teckstack.arnis.csv");
 
                 //validate working folder /ws
                 string ws = settings.SingleOrDefault(s => s.Key == "ws").Value;
