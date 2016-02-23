@@ -30,7 +30,7 @@ namespace Arnis.Core.Trackers
                         Name = Path.GetFileNameWithoutExtension(s),
                         Location = s,
                     };
-                    stackReport.Results.Add(solution);
+                    stackReport.Solutions.Add(solution);
 
                     var solutionFileContent = File.ReadAllText(s);
                     var projRegex = new Regex("Project\\(\"\\{[\\w-]*\\}\"\\) = \"([\\w _]*.*)\", \"(.*\\.(cs)proj)\"", RegexOptions.Compiled);
@@ -81,14 +81,14 @@ namespace Arnis.Core.Trackers
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine("ERROR: " + ex.Message);
+                            ConsoleEx.Error("ERROR: " + ex.Message);
                         }
 
                     });
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("ERROR: " + ex.Message);
+                    ConsoleEx.Error("ERROR: " + ex.Message);
                 }
             });
 

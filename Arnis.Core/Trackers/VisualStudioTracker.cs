@@ -56,13 +56,13 @@ namespace Arnis.Core.Trackers
                         Version = versionMap.ProductVersion
                     });
 
-                    stackReport.Results.Add(solution);
+                    stackReport.Solutions.Add(solution);
                 }
 
             });
 
             //tracks all that were skipped in stage 1 from 2003 - 2012
-            var solutionFilesStage2 = solutionFilesStage1.Where(f => !stackReport.Results.Exists(r => r.Location == f)).ToList();
+            var solutionFilesStage2 = solutionFilesStage1.Where(f => !stackReport.Solutions.Exists(r => r.Location == f)).ToList();
             solutionFilesStage2.ForEach(f=>
             {
                 var versionMap = TrackWithSolutionFormat(f);
@@ -80,14 +80,14 @@ namespace Arnis.Core.Trackers
                         Version = versionMap.ProductVersion
                     });
 
-                    stackReport.Results.Add(solution);
+                    stackReport.Solutions.Add(solution);
                 }
             });
 
 
             //record all skipped files and save as error
-            var skippedFilesStage2 = solutionFilesStage1.Where(f => !stackReport.Results.Exists(r => r.Location == f)).ToList();
-            stackReport.Errors = skippedFilesStage2;
+            var skippedFilesStage2 = solutionFilesStage1.Where(f => !stackReport.Solutions.Exists(r => r.Location == f)).ToList();
+            stackReport.Logs = skippedFilesStage2;
 
             return stackReport;
         }
@@ -172,7 +172,7 @@ namespace Arnis.Core.Trackers
                 }
                 else
                 {
-                    Console.WriteLine("Version not available: {0}", f);
+                    ConsoleEx.Warn($"Version not available: {f}");
                 }
 
             });

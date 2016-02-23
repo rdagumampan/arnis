@@ -31,7 +31,7 @@ namespace Arnis.Core.Trackers
                         Name = Path.GetFileNameWithoutExtension(s),
                         Location = s,
                     };
-                    stackReport.Results.Add(solution);
+                    stackReport.Solutions.Add(solution);
 
                     var solutionFileContent = File.ReadAllText(s);
                     var projRegex = new Regex("Project\\(\"\\{[\\w-]*\\}\"\\) = \"([\\w _]*.*)\", \"(.*\\.(cs)proj)\"", RegexOptions.Compiled);
@@ -118,25 +118,10 @@ namespace Arnis.Core.Trackers
                     {
                         Name = referenceName, Version = versionInfo, Location = v.Location
                     });
-
-                dependecies.ForEach(f =>
-                {
-                    if (!string.IsNullOrEmpty(f.Location))
-                    {
-                        var exists = File.Exists(f.Location);
-                        if (!exists)
-                        {
-                            Console.ForegroundColor= ConsoleColor.Red;
-                            Console.WriteLine("Missing dependency file: dll: {0}, targetProject: {1}", f.Location, projectFile);
-                        }
-                    }
-                });
-                Console.ForegroundColor = ConsoleColor.White;
-
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);                
+                ConsoleEx.Error(ex.Message);                
             }
 
             return dependecies;

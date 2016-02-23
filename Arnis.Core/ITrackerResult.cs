@@ -4,7 +4,7 @@ namespace Arnis.Core
 {
     public interface ITrackerResult
     {
-        List<Solution> Results { get; set; }
-        List<string> Errors { get; set; }
+        List<Solution> Solutions { get; set; }
+        List<string> Logs { get; set; }
     }
 }

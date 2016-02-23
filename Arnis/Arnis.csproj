@@ -55,10 +55,6 @@
       <Project>{15DB4025-71B3-4651-9B34-C25D1BB1593B}</Project>
       <Name>Arnis.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Arnis.Sinks\Arnis.Sinks.csproj">
-      <Project>{56ec8e66-9a25-4f99-beba-d4009cdc8202}</Project>
-      <Name>Arnis.Sinks</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
