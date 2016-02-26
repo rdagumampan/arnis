@@ -25,7 +25,7 @@ namespace Arnis.Core.Trackers
         {
         }
 
-        public string Name { get; } = "VisualStudio";
+        public string Name => this.GetType().Name;
         public string Description { get; } = "Track all projects that used Microsoft Visual Studio IDE.";
 
         public TrackerResult Run(string workspace, List<string> skipList)

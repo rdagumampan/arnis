@@ -9,8 +9,8 @@ namespace Arnis.Core.Trackers
 {
     public class ReferencedAssembliesTracker : ITracker
     {
-        public string Name { get; } = "ReferencedAssembliesTracker";
-        public string Description { get; } = "Tracks all referenced assemblies in a cs project.";
+        public string Name => this.GetType().Name;
+        public string Description { get; } = "Tracks all referenced assemblies in a c# project.";
 
         public ReferencedAssembliesTracker()
         {

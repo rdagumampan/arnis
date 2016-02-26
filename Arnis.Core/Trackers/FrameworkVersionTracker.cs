@@ -9,7 +9,7 @@ namespace Arnis.Core.Trackers
 {
     public class FrameworkVersionTracker: ITracker
     {
-        public string Name { get; } = "FrameworkVersionTracker";
+        public string Name => this.GetType().Name;
         public string Description { get; } = "Tracks target framework version for each project";
 
         public FrameworkVersionTracker()

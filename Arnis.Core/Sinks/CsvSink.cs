@@ -7,6 +7,9 @@ namespace Arnis.Core.Sinks
 {
     public class CsvSink : ISink
     {
+        public string Name => this.GetType().Name;
+        public string Description => "Sinks the tracker results into a CSV file.";
+
         public void Flush(Workspace workspace)
         {
             ConsoleEx.Info($"Running sink: {this.GetType().Name}");

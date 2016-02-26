@@ -18,6 +18,9 @@ namespace Arnis.Sinks
             serviceUri = "http://arnis.azurewebsites.net";
         }
 
+        public string Name => this.GetType().Name;
+        public string Description => "Sinks the tracker results into Arnis web api endpoint.";
+
         public void Flush(Workspace workspace)
         {
             ConsoleEx.Info($"Running sink: {this.GetType().Name}");

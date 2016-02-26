@@ -3,7 +3,7 @@
   <Class Name="Arnis.Core.TrackerResult">
     <Position X="10.25" Y="2.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAQAAAAAAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAABAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>TrackerResult.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -11,21 +11,21 @@
   <Class Name="Arnis.Core.Solution">
     <Position X="0.5" Y="3" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAACAAAIAAAQAAAAAAAAAAAAAAAAAAQA=</HashCode>
+      <HashCode>AAAAAAAAAAAgAACAAAIAAAQAAAAAAAAAAAAAAAAAAQA=</HashCode>
       <FileName>Solution.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Arnis.Core.Project">
-    <Position X="0.5" Y="5" Width="2.5" />
+    <Position X="0.5" Y="5.25" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAACAAAIAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAgAACAAAIAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Project.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Arnis.Core.Trackers.FrameworkVersionTracker" BaseTypeListCollapsed="true">
     <Position X="13.5" Y="0.75" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAgAAAAAAAAAAQAAAAIAAAAAAAAAAAAAAI=</HashCode>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAI=</HashCode>
       <FileName>Trackers\FrameworkVersionTracker.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -33,7 +33,7 @@
   <Class Name="Arnis.Core.Trackers.ReferencedAssembliesTracker" BaseTypeListCollapsed="true">
     <Position X="13.5" Y="3.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAgAAAAAQAAAAQAAAAIAAAAAAAAAAAAAAI=</HashCode>
+      <HashCode>AAAAAAAAAAAgAAAAAQAAAAQAAAAAAAAAAAAAAAAAAAI=</HashCode>
       <FileName>Trackers\ReferencedAssembliesTracker.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -48,7 +48,7 @@
   <Class Name="Arnis.Core.Trackers.VisualStudioTracker" BaseTypeListCollapsed="true">
     <Position X="16.25" Y="0.75" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAgAACgAQAAAAQAAAAIAAACAAAAAAgAAAI=</HashCode>
+      <HashCode>AAAAAAAAAAAgAACgAQAAAAQAAAAAAAACAAAAAAAAAAI=</HashCode>
       <FileName>Trackers\VisualStudioTracker.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -56,7 +56,7 @@
   <Class Name="Arnis.Core.Sinks.CsvSink">
     <Position X="19.25" Y="0.75" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAQAAAAgAAAAAAAAAAAAAAAAAAAIAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAA=</HashCode>
       <FileName>Sinks\CsvSink.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -99,14 +99,14 @@
   <Interface Name="Arnis.Core.ISink">
     <Position X="7.5" Y="2.75" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAQAAAAAAAAAAAAAAAAIAAA=</HashCode>
       <FileName>ISink.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Arnis.Core.ITrackerResult">
     <Position X="10.25" Y="0.75" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAQAAAAAAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAABAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>ITrackerResult.cs</FileName>
     </TypeIdentifier>
   </Interface>
