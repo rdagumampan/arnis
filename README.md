@@ -12,19 +12,32 @@ At the moment, you can:
 By consistently monitoring the technology stack in our application portfolio, we can better plan for component upgrades, monitor 3rd party usage, consolidate component versions, or strategize decommisioning of projects and tools.
 
 ####How to use
-    arnis.exe /ws:"<your_workspace_folder>" /sf:<skip_these_folders>
+    > arnis /ws:"<your_workspace_folder>" /sf:<skip_these_folders>
 
 Example (simplified):
 
-	arnis.exe /ws:"c:\github\arnis"
+	> arnis /ws:"c:\github\arnis"
 
 Example (with skip file):
 
-	arnis.exe /ws:"c:\github\arnis" /sf:"c:\skip.txt"
+	> arnis /ws:"c:\github\arnis" /sf:"c:\skip.txt"
     
     where skip.txt contains
     c:\arnis\bin\debug
     c:\arnis\packages
+
+Example (publish to arnis.web):
+
+	Step 1: get your API key	
+	> arnis /web /r /u:email@website.com
+	> done! keep your api key secret
+	> XXXX-XXXX-XXXX
+
+	Step 2: publish your workspace
+	> arnis /ws:"c:\github\arnis" /web /apk:"XXXX-XXXX-XXXX"
+
+	Step 3: visit your workspace
+	> start http://arnis.azurewebsites.net/workspaces/email@website.com
 
 ####How it works
 Arnis.NET scans the target workspace folder and perform analysis of solutions and projects. Then the tracker's results are consolidated to form a dependency tree .
