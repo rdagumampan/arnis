@@ -32,7 +32,7 @@ namespace Arnis.Sinks
             {
                 ConsoleEx.Ok("Workspace analysis report published.");
                 string location = response.Headers.FirstOrDefault(h=> h.Name == "Location").Value.ToString().ToLower();
-                ConsoleEx.Ok($"Check out {location}");
+                ConsoleEx.Ok($"Visit {location}");
             }
             else
             {
