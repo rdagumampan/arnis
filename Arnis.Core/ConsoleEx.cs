@@ -8,13 +8,13 @@ namespace Arnis.Core
         public static void Info(string message)
         {
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine(message);
+            Console.WriteLine($"INFO {message}");
         }
 
         public static void Ok(string message)
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine(message);
+            Console.WriteLine($"INFO {message}");
             Console.ForegroundColor = ConsoleColor.White;
         }
 
@@ -22,14 +22,14 @@ namespace Arnis.Core
         public static void Warn(string message)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(message);
+            Console.WriteLine($"WARNING {message}");
             Console.ForegroundColor = ConsoleColor.White;
         }
 
         public static void Error(string message)
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(message);
+            Console.WriteLine($"ERROR {message}");
             Console.ForegroundColor = ConsoleColor.White;
         }
 

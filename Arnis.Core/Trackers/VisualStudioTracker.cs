@@ -7,14 +7,6 @@ using System.Text.RegularExpressions;
 
 namespace Arnis.Core.Trackers
 {
-    public class VsVersionMap
-    {
-        public string ProductVersion { get; set; }
-        public string VsVisualStudioVersion { get; set; }
-        public string VsSlnFileFormatVersion { get; set; }
-        public string VsMsBuildVersion { get; set; }
-    }
-
     //http://pascoal.net/2011/05/getting-visual-studio-version-of-a-solution-file/
     //https://en.wikipedia.org/wiki/Microsoft_Visual_Studio
     //https://regex101.com/
@@ -52,7 +44,7 @@ namespace Arnis.Core.Trackers
 
                     solution.Dependencies.Add(new Dependency
                     {
-                        Name = Name,
+                        Name = Name.Replace("Tracker", ""),
                         Version = versionMap.ProductVersion
                     });
 
@@ -76,7 +68,7 @@ namespace Arnis.Core.Trackers
 
                     solution.Dependencies.Add(new Dependency
                     {
-                        Name = Name,
+                        Name = Name.Replace("Tracker",""),
                         Version = versionMap.ProductVersion
                     });
 
@@ -93,9 +85,9 @@ namespace Arnis.Core.Trackers
         }
 
         //only VS2013 - VS2015 contains VisualStudioVersion attribute in sln files
-        private VsVersionMap TrackWithVisualStudioVersion(string solutionFile)
+        private VisualStudioVersionMap TrackWithVisualStudioVersion(string solutionFile)
         {
-            VsVersionMap vsMap = null;
+            VisualStudioVersionMap visualStudioMap = null;
             string contents = File.ReadAllText(solutionFile);
 
             var versionMappings = GetVsVersionMapping();
@@ -104,17 +96,17 @@ namespace Arnis.Core.Trackers
                 var regex = new Regex($"(\\W|^)VisualStudioVersion\\s=\\s{v.VsVisualStudioVersion}");
                 if (regex.IsMatch(contents))
                 {
-                    vsMap = v;
+                    visualStudioMap = v;
                 }
             });
 
-            return vsMap;
+            return visualStudioMap;
         }
 
         //VS2012 - VS2015 uses the same solution file format version which is 12.00
-        private VsVersionMap TrackWithSolutionFormat(string f)
+        private VisualStudioVersionMap TrackWithSolutionFormat(string f)
         {
-            VsVersionMap vsMap = null;
+            VisualStudioVersionMap visualStudioMap = null;
             string contents = File.ReadAllText(f);
 
             var versionMappings = GetVsVersionMapping();
@@ -123,11 +115,11 @@ namespace Arnis.Core.Trackers
                 var regex = new Regex($"(\\W |^)Microsoft\\sVisual\\sStudio\\sSolution\\sFile,\\sFormat\\sVersion\\s{v.VsSlnFileFormatVersion}", RegexOptions.Multiline);
                 if (regex.IsMatch(contents))
                 {
-                    vsMap = v;
+                    visualStudioMap = v;
                 }
             });
 
-            return vsMap;
+            return visualStudioMap;
         }
 
         //VS2012 - VS2015 uses the same solution file version (visa MSBUILD parser) which is 12.00
@@ -166,7 +158,7 @@ namespace Arnis.Core.Trackers
                 {
                     report.Add(new Dependency
                     {
-                        Name = Name,
+                        Name = Name.Replace("Tracker", ""),
                         Version = versionInfo.ProductVersion,
                     });
                 }
@@ -179,18 +171,18 @@ namespace Arnis.Core.Trackers
             return report;
         }
 
-        private List<VsVersionMap> GetVsVersionMapping()
+        private List<VisualStudioVersionMap> GetVsVersionMapping()
         {
-            var vsMapping = new List<VsVersionMap>
+            var vsMapping = new List<VisualStudioVersionMap>
             {
-                new VsVersionMap {ProductVersion = "2002", VsVisualStudioVersion = "7.0", VsSlnFileFormatVersion = "7.0", VsMsBuildVersion = "7"},
-                new VsVersionMap {ProductVersion = "2003", VsVisualStudioVersion = "7.1", VsSlnFileFormatVersion = "8.0", VsMsBuildVersion = "8"},
-                new VsVersionMap {ProductVersion = "2005", VsVisualStudioVersion = "8.0", VsSlnFileFormatVersion = "9.0", VsMsBuildVersion = "9"},
-                new VsVersionMap {ProductVersion = "2008", VsVisualStudioVersion = "9.0", VsSlnFileFormatVersion = "10.0", VsMsBuildVersion = "10"},
-                new VsVersionMap {ProductVersion = "2010", VsVisualStudioVersion = "10.0", VsSlnFileFormatVersion = "11.0", VsMsBuildVersion = "11"},
-                new VsVersionMap {ProductVersion = "2012", VsVisualStudioVersion = "11.0", VsSlnFileFormatVersion = "12.0", VsMsBuildVersion = "12"},
-                new VsVersionMap {ProductVersion = "2013", VsVisualStudioVersion = "12.0", VsSlnFileFormatVersion = "NA", VsMsBuildVersion = "NA"},
-                new VsVersionMap {ProductVersion = "2015", VsVisualStudioVersion = "14.0", VsSlnFileFormatVersion = "NA", VsMsBuildVersion = "NA"},
+                new VisualStudioVersionMap {ProductVersion = "2002", VsVisualStudioVersion = "7.0", VsSlnFileFormatVersion = "7.0", VsMsBuildVersion = "7"},
+                new VisualStudioVersionMap {ProductVersion = "2003", VsVisualStudioVersion = "7.1", VsSlnFileFormatVersion = "8.0", VsMsBuildVersion = "8"},
+                new VisualStudioVersionMap {ProductVersion = "2005", VsVisualStudioVersion = "8.0", VsSlnFileFormatVersion = "9.0", VsMsBuildVersion = "9"},
+                new VisualStudioVersionMap {ProductVersion = "2008", VsVisualStudioVersion = "9.0", VsSlnFileFormatVersion = "10.0", VsMsBuildVersion = "10"},
+                new VisualStudioVersionMap {ProductVersion = "2010", VsVisualStudioVersion = "10.0", VsSlnFileFormatVersion = "11.0", VsMsBuildVersion = "11"},
+                new VisualStudioVersionMap {ProductVersion = "2012", VsVisualStudioVersion = "11.0", VsSlnFileFormatVersion = "12.0", VsMsBuildVersion = "12"},
+                new VisualStudioVersionMap {ProductVersion = "2013", VsVisualStudioVersion = "12.0", VsSlnFileFormatVersion = "NA", VsMsBuildVersion = "NA"},
+                new VisualStudioVersionMap {ProductVersion = "2015", VsVisualStudioVersion = "14.0", VsSlnFileFormatVersion = "NA", VsMsBuildVersion = "NA"},
             };
 
             return vsMapping;
