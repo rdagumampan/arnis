@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Arnis.Core;
 using Arnis.Sinks;
@@ -12,10 +11,13 @@ namespace Arnis
 {
     static class Program
     {
+        //example 1: simple
         //>arnis /ws:"c:\github\arnis"
         //>arnis /ws:"c:\github\arnis" /sf:"c:\skip.txt"
+
+        //example 1: publish into web sink
         //>arnis /web /r /u:email@website.com
-        //>arnis /ws:"c:\github\arnis" /web /apk:"XXXX-XXXX-XXXX"
+        //>arnis /web /apk:"XXXX-XXXX" /ws:"c:\github\arnis"
 
         static void Main(string[] args)
         {
@@ -25,25 +27,26 @@ namespace Arnis
                 {
                     var parameter = a.Split('=');
                     return new
-                        {
-                            Key = parameter[0].Replace("/",""),
-                            Value = parameter.Length == 2 ? parameter[1]: null
-                        };
+                    {
+                        Key = parameter[0].Replace("/", ""),
+                        Value = parameter.Length == 2 ? parameter[1] : null
+                    };
                 }).ToDictionary(m => m.Key, m => m.Value);
 
                 PrintSettings(settings);
 
-                //capture skip folder /sf
+                //capture /sf
                 var skipList = GetSkipList(settings);
 
-                //capture /web sink
+                //capture /web
                 var slashWebExist = settings.ContainsKey("web");
                 if (slashWebExist)
                 {
-                    //use web api, register, username
+                    //capture /web /r
                     var slashRExist = settings.ContainsKey("r");
                     if (slashRExist)
                     {
+                        //capture /web /r /u
                         var slashUExist = settings.ContainsKey("u");
                         if (slashUExist)
                         {
@@ -52,23 +55,25 @@ namespace Arnis
                             var sinkRegistrar = new WebSinkRegistrar();
                             var registration = sinkRegistrar.Register(userName);
 
-                            if(null!= registration)
+                            if (null != registration)
                             {
                                 string response =
                                       $"{Environment.NewLine}API Key: {registration.ApiKey}"
                                     + $"{Environment.NewLine}Workspace: {registration.Workspace}"
-                                    + $"{Environment.NewLine}Location: {registration.Location}";
-                                ConsoleEx.Ok($"Done! Please keep your api key secret.{response}");
+                                    + $"{Environment.NewLine}Location: {registration.WorkspaceUri}"
+                                    + $"{Environment.NewLine}Location: {registration.AccountUri}";
+
+                                ConsoleEx.Ok($"Done! Please keep your API key secret.{response}");
                             }
                         }
                     }
 
-                    //use web api, api key
+                    //capture /web /apk /ws
                     var slashApkExist = settings.ContainsKey("apk");
                     if (slashApkExist)
                     {
                         var apiKey = settings.SingleOrDefault(s => s.Key == "apk").Value;
-                        
+
                         //validate working folder /ws is required parameter
                         string slashWs = settings.SingleOrDefault(s => s.Key == "ws").Value;
                         if (null == slashWs)
@@ -77,13 +82,16 @@ namespace Arnis
                         }
 
                         //run all trackers, at this point we have all the dependencies
-                        var trackerResults = TrackDependencies(slashWs, skipList);
+                        var trackerResult = TrackDependencies(slashWs, skipList);
 
-                        //create the workspace details0
+                        //create the workspace details
+                        string worspaceName = new DirectoryInfo(slashWs.TrimEnd(Path.DirectorySeparatorChar)).Name;
                         var workspace = new Workspace
                         {
                             ApiKey = apiKey,
-                            Solutions = trackerResults.Solutions
+                            Name = worspaceName,
+                            Solutions = trackerResult.Solutions,
+                            Logs = trackerResult.Logs
                         };
 
                         var webSink = new WebSink();
@@ -92,7 +100,7 @@ namespace Arnis
                 }
                 else
                 {
-                    //validate working folder /ws is required parameter
+                    //capture /ws
                     string slashWs = settings.SingleOrDefault(s => s.Key == "ws").Value;
                     if (null == slashWs)
                     {
@@ -101,14 +109,15 @@ namespace Arnis
 
                     //fall back to default csv as default sink 
                     //run all trackers, at this point we have all the dependencies
-                    var trackerResults = TrackDependencies(slashWs, skipList);
+                    var trackerResult = TrackDependencies(slashWs, skipList);
 
                     //create the workspace details
                     string worspaceName = new DirectoryInfo(slashWs.TrimEnd(Path.DirectorySeparatorChar)).Name;
                     var workspace = new Workspace
                     {
                         Name = worspaceName.ToLower(),
-                        Solutions = trackerResults.Solutions
+                        Solutions = trackerResult.Solutions,
+                        Logs = trackerResult.Logs
                     };
 
                     //run default sink
@@ -168,9 +177,8 @@ namespace Arnis
             var trackerTasks = trackers.Select(t =>
             {
                 var tracker = Activator.CreateInstance(t) as ITracker;
-                return Task.Factory.StartNew(() => tracker.Run(workspace, skipList));
+                return Task.Factory.StartNew(() => tracker?.Run(workspace, skipList));
             });
-
             Task.WaitAll(trackerTasks.ToArray());
 
             var trackerResultRaw = trackerTasks.Select(t => t.Result);
@@ -183,7 +191,7 @@ namespace Arnis
             if (trackerResult.Logs.ToList().Any())
             {
                 ConsoleEx.Error($"Unknown files found: {trackerResult.Logs.Count()}");
-                trackerResult.Logs.ForEach(f => { ConsoleEx.Error($"\t{f}"); });
+                trackerResult.Logs.ForEach(f => { ConsoleEx.Warn($"\t{f}"); });
             }
             return trackerResult;
         }
@@ -205,8 +213,8 @@ namespace Arnis
             var assemblies = GetSinkAssemblies(path);
             var sinks = assemblies
                 .SelectMany(s => s.GetTypes())
-                .Where(p => 
-                    typeof(ISink).IsAssignableFrom(p) 
+                .Where(p =>
+                    typeof(ISink).IsAssignableFrom(p)
                     && !p.IsInterface
                     && p.Name.ToLower() == $"{sink}sink".ToLower());
 

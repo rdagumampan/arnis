@@ -1,8 +1,6 @@
-﻿using System.Linq;
-using System.Net;
+﻿using System.Net;
 using Arnis.Core;
 using RestSharp;
-using RestSharp.Extensions;
 
 namespace Arnis.Sinks
 {
@@ -15,7 +13,7 @@ namespace Arnis.Sinks
         {
             var serviceClient = new RestClient(serviceUri);
 
-            var request = new RestRequest(@"api\account", Method.POST);
+            var request = new RestRequest(@"api\accounts", Method.POST);
             request.AddJsonBody(new
             {
                 userName = emailAddress

@@ -21,18 +21,21 @@ namespace Arnis.Sinks
         {
             ConsoleEx.Info($"Running sink: {this.GetType().Name}");
 
-            var serviceClient = new RestClient(serviceUri);
-
-            var request = new RestRequest(@"api\workspace", Method.POST);
+            var request = new RestRequest(@"api\workspaces", Method.POST);
             request.AddJsonBody(workspace);
             request.RequestFormat = DataFormat.Json;
 
-            var response = serviceClient.Post(request);
+            var restClient = new RestClient(serviceUri);
+            var response = restClient.Post(request);
             if(response.StatusCode == HttpStatusCode.OK)
             {
                 ConsoleEx.Ok("Workspace analysis report published.");
-                string location = response.Headers.FirstOrDefault(h=> h.Name == "Location").Value.ToString().ToLower();
-                ConsoleEx.Ok($"Visit {location}");
+                var locationHeader = response.Headers.FirstOrDefault(h=> h.Name == "Location");
+                if (locationHeader != null)
+                {
+                    string workspaceLocation = locationHeader.Value.ToString().ToLower();
+                    ConsoleEx.Ok($"Visit {workspaceLocation}");
+                }
             }
             else
             {
