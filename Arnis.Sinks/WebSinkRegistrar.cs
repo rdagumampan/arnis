@@ -6,14 +6,14 @@ namespace Arnis.Sinks
 {
     public class WebSinkRegistrar : ISinkRegistrar
     {
-        private readonly string serviceUri = "http://arnis.azurewebsites.net";
+        private readonly string serviceUri = "http://arnisapi.azurewebsites.net";
         //private readonly string serviceUri = "http://localhost:5000";
 
         public Registration Register(string emailAddress)
         {
             var serviceClient = new RestClient(serviceUri);
 
-            var request = new RestRequest(@"api\accounts", Method.POST);
+            var request = new RestRequest(@"api/accounts", Method.POST);
             request.AddJsonBody(new
             {
                 userName = emailAddress

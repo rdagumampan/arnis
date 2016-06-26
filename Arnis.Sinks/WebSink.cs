@@ -7,7 +7,7 @@ namespace Arnis.Sinks
 {
     public class WebSink : ISink
     {
-        private readonly string serviceUri = "http://arnis.azurewebsites.net";
+        private readonly string serviceUri = "http://arnisapi.azurewebsites.net";
         //private readonly string serviceUri = "http://localhost:5000";
 
         public WebSink()
@@ -21,7 +21,7 @@ namespace Arnis.Sinks
         {
             ConsoleEx.Info($"Running sink: {this.GetType().Name}");
 
-            var request = new RestRequest(@"api\workspaces", Method.POST);
+            var request = new RestRequest(@"api/workspaces", Method.POST);
             request.AddJsonBody(workspace);
             request.RequestFormat = DataFormat.Json;
 
