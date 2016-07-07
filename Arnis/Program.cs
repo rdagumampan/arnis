@@ -181,7 +181,7 @@ namespace Arnis
             });
             Task.WaitAll(trackerTasks.ToArray());
 
-            var trackerResultRaw = trackerTasks.Select(t => t.Result);
+            var trackerResultRaw = trackerTasks.Select(t => t.Result).ToList();
             var trackerResult = new TrackerResult
             {
                 Solutions = trackerResultRaw.SelectMany(t => t.Solutions).ToList(),
@@ -190,8 +190,9 @@ namespace Arnis
 
             if (trackerResult.Logs.ToList().Any())
             {
-                ConsoleEx.Error($"Unknown files found: {trackerResult.Logs.Count()}");
-                trackerResult.Logs.ForEach(f => { ConsoleEx.Warn($"\t{f}"); });
+                var errors = trackerResult.Logs.Count(m => m.Contains("ERROR"));
+                var warnings = trackerResult.Logs.Count(m => m.Contains("WARN"));
+                ConsoleEx.Info($"Tracker found {errors} errors, {warnings} warnings");
             }
             return trackerResult;
         }
@@ -200,10 +201,12 @@ namespace Arnis
         {
             return Directory.GetFiles(path, "*.dll")
                 .Where(f =>
-                    Path.GetFileNameWithoutExtension(f).Contains(".Core")
-                    || Path.GetFileNameWithoutExtension(f).Contains(".Trackers")
-                )
-                .Select(a => Assembly.LoadFile(a));
+                {
+                    var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(f);
+                    return fileNameWithoutExtension != null && 
+                          (fileNameWithoutExtension.Contains(".Core") || fileNameWithoutExtension.Contains(".Trackers"));
+                })
+                .Select(Assembly.LoadFile);
         }
 
         private static void SinkDependencies(string sink, Workspace workspace)
@@ -221,7 +224,7 @@ namespace Arnis
             var sinkTasks = sinks.Select(t =>
             {
                 var tracker = Activator.CreateInstance(t) as ISink;
-                return Task.Factory.StartNew(() => tracker.Flush(workspace));
+                return Task.Factory.StartNew(() => tracker?.Flush(workspace));
             });
 
             Task.WaitAll(sinkTasks.ToArray());
@@ -231,10 +234,12 @@ namespace Arnis
         {
             return Directory.GetFiles(path, "*.dll")
                 .Where(f =>
-                    Path.GetFileNameWithoutExtension(f).Contains(".Core")
-                    || Path.GetFileNameWithoutExtension(f).Contains(".Sinks")
-                )
-                .Select(a => Assembly.LoadFile(a));
+                {
+                    var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(f);
+                    return fileNameWithoutExtension != null && 
+                           (fileNameWithoutExtension.Contains(".Core") || fileNameWithoutExtension.Contains(".Sinks"));
+                })
+                .Select(Assembly.LoadFile);
         }
     }
 }

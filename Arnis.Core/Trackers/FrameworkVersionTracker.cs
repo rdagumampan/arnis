@@ -12,15 +12,10 @@ namespace Arnis.Core.Trackers
         public string Name => this.GetType().Name;
         public string Description { get; } = "Tracks target framework version for each project";
 
-        public FrameworkVersionTracker()
-        {
-        }
-
+        readonly TrackerResult _trackerResult = new TrackerResult();
         public TrackerResult Run(string workspace, List<string> skipList)
         {
-            var stackReport = new TrackerResult();
             var solutionFiles = Directory.EnumerateFiles(workspace, "*.sln", SearchOption.AllDirectories).ToList();
-
             solutionFiles.ForEach(s =>
             {
                 try
@@ -30,7 +25,7 @@ namespace Arnis.Core.Trackers
                         Name = Path.GetFileNameWithoutExtension(s),
                         Location = s,
                     };
-                    stackReport.Solutions.Add(solution);
+                    _trackerResult.Solutions.Add(solution);
 
                     var solutionFileContent = File.ReadAllText(s);
                     var projRegex = new Regex("Project\\(\"\\{[\\w-]*\\}\"\\) = \"([\\w _]*.*)\", \"(.*\\.(cs)proj)\"", RegexOptions.Compiled);
@@ -49,10 +44,12 @@ namespace Arnis.Core.Trackers
                             };
                             solution.Projects.Add(project);
 
-                            string projectFile;
+                            string projectFile = string.Empty;
                             if (!Path.IsPathRooted(p))
                             {
-                                projectFile = Path.Combine(Path.GetDirectoryName(s), p);
+                                var directoryName = Path.GetDirectoryName(s);
+                                if (directoryName != null)
+                                    projectFile = Path.Combine(directoryName, p);
                             }
                             else
                             {
@@ -86,23 +83,27 @@ namespace Arnis.Core.Trackers
                             }
                             else
                             {
-                                ConsoleEx.Warn($"Missing file: {projectFile}");
+                                string message = $"Missing file: {projectFile}";
+                                _trackerResult.Logs.Add($"WARN: {message}");
+
+                                ConsoleEx.Warn(message);
                             }
                         }
                         catch (Exception ex)
                         {
+                            _trackerResult.Logs.Add($"ERROR: {ex.Message}");
                             ConsoleEx.Error(ex.Message);
                         }
-
                     });
                 }
                 catch (Exception ex)
                 {
+                    _trackerResult.Logs.Add($"ERROR: {ex.Message}");
                     ConsoleEx.Error(ex.Message);
                 }
             });
 
-            return stackReport;
+            return _trackerResult;
         }
     }
 }

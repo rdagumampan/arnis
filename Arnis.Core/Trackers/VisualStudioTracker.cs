@@ -20,10 +20,9 @@ namespace Arnis.Core.Trackers
         public string Name => this.GetType().Name;
         public string Description { get; } = "Track all projects that used Microsoft Visual Studio IDE.";
 
+        readonly TrackerResult _trackerResult = new TrackerResult();
         public TrackerResult Run(string workspace, List<string> skipList)
         {
-            var stackReport = new TrackerResult();
-
             var solutionFiles = Directory.EnumerateFiles(workspace, "*.sln", SearchOption.AllDirectories).ToList();
 
             //skip all files within the skip list
@@ -48,13 +47,13 @@ namespace Arnis.Core.Trackers
                         Version = versionMap.ProductVersion
                     });
 
-                    stackReport.Solutions.Add(solution);
+                    _trackerResult.Solutions.Add(solution);
                 }
 
             });
 
             //tracks all that were skipped in stage 1 from 2003 - 2012
-            var solutionFilesStage2 = solutionFilesStage1.Where(f => !stackReport.Solutions.Exists(r => r.Location == f)).ToList();
+            var solutionFilesStage2 = solutionFilesStage1.Where(f => !_trackerResult.Solutions.Exists(r => r.Location == f)).ToList();
             solutionFilesStage2.ForEach(f=>
             {
                 var versionMap = TrackWithSolutionFormat(f);
@@ -72,16 +71,19 @@ namespace Arnis.Core.Trackers
                         Version = versionMap.ProductVersion
                     });
 
-                    stackReport.Solutions.Add(solution);
+                    _trackerResult.Solutions.Add(solution);
                 }
             });
 
 
             //record all skipped files and save as error
-            var skippedFilesStage2 = solutionFilesStage1.Where(f => !stackReport.Solutions.Exists(r => r.Location == f)).ToList();
-            stackReport.Logs = skippedFilesStage2;
+            var skippedFilesStage2 = solutionFilesStage1
+                .Where(f => !_trackerResult.Solutions.Exists(r => r.Location == f))
+                .Select(f=> $"WARN: Skipped file {f}")
+                .ToList();
+            _trackerResult.Logs = skippedFilesStage2;
 
-            return stackReport;
+            return _trackerResult;
         }
 
         //only VS2013 - VS2015 contains VisualStudioVersion attribute in sln files
@@ -164,7 +166,8 @@ namespace Arnis.Core.Trackers
                 }
                 else
                 {
-                    ConsoleEx.Warn($"Version not available: {f}");
+                    string message = $"Version not available";
+                    _trackerResult.Logs.Add($"WARN: {message}");
                 }
 
             });

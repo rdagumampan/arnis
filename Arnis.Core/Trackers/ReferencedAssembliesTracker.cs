@@ -12,16 +12,10 @@ namespace Arnis.Core.Trackers
         public string Name => this.GetType().Name;
         public string Description { get; } = "Tracks all referenced assemblies in a c# project.";
 
-        public ReferencedAssembliesTracker()
-        {
-        }
-
+        readonly TrackerResult _trackerResult = new TrackerResult();
         public TrackerResult Run(string workspace, List<string> skipList)
         {
-            var stackReport = new TrackerResult();
-
             var solutionFiles = Directory.EnumerateFiles(workspace, "*.sln", SearchOption.AllDirectories).ToList();
-
             solutionFiles.ForEach(s=>
             {
                 try
@@ -31,7 +25,7 @@ namespace Arnis.Core.Trackers
                         Name = Path.GetFileNameWithoutExtension(s),
                         Location = s,
                     };
-                    stackReport.Solutions.Add(solution);
+                    _trackerResult.Solutions.Add(solution);
 
                     var solutionFileContent = File.ReadAllText(s);
                     var projRegex = new Regex("Project\\(\"\\{[\\w-]*\\}\"\\) = \"([\\w _]*.*)\", \"(.*\\.(cs)proj)\"", RegexOptions.Compiled);
@@ -66,6 +60,7 @@ namespace Arnis.Core.Trackers
                         }
                         catch (Exception ex)
                         {
+                            _trackerResult.Logs.Add($"ERROR: {ex.Message}");
                             ConsoleEx.Error(ex.Message);
                         }
 
@@ -73,11 +68,12 @@ namespace Arnis.Core.Trackers
                 }
                 catch (Exception ex)
                 {
+                    _trackerResult.Logs.Add($"ERROR: {ex.Message}");
                     ConsoleEx.Error(ex.Message);
                 }
             });
 
-            return stackReport;
+            return _trackerResult;
         }
 
         //thanks @granadacoder where i based the strategy to extract assembly references
@@ -133,12 +129,14 @@ namespace Arnis.Core.Trackers
                 }
                 else
                 {
-                    ConsoleEx.Warn($"Missing file: {projectFile}");
+                    string message = $"Missing file: {projectFile}";
+                    _trackerResult.Logs.Add($"WARN: {message}");
                 }
             }
             catch (Exception ex)
             {
-                ConsoleEx.Error(ex.Message);                
+                _trackerResult.Logs.Add($"ERROR: {ex.Message}");
+                ConsoleEx.Error(ex.Message);
             }
 
             return dependecies;
