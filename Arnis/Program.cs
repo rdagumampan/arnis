@@ -197,18 +197,6 @@ namespace Arnis
             return trackerResult;
         }
 
-        private static IEnumerable<Assembly> GetTrackerAssemblies(string path)
-        {
-            return Directory.GetFiles(path, "*.dll")
-                .Where(f =>
-                {
-                    var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(f);
-                    return fileNameWithoutExtension != null && 
-                          (fileNameWithoutExtension.Contains(".Core") || fileNameWithoutExtension.Contains(".Trackers"));
-                })
-                .Select(Assembly.LoadFile);
-        }
-
         private static void SinkDependencies(string sink, Workspace workspace)
         {
             string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -230,6 +218,17 @@ namespace Arnis
             Task.WaitAll(sinkTasks.ToArray());
         }
 
+        private static IEnumerable<Assembly> GetTrackerAssemblies(string path)
+        {
+            return Directory.GetFiles(path, "*.dll")
+                .Where(f =>
+                {
+                    var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(f);
+                    return fileNameWithoutExtension != null &&
+                          (fileNameWithoutExtension.Contains(".Core") || fileNameWithoutExtension.Contains(".Trackers"));
+                })
+                .Select(Assembly.LoadFile);
+        }
         private static IEnumerable<Assembly> GetSinkAssemblies(string path)
         {
             return Directory.GetFiles(path, "*.dll")
