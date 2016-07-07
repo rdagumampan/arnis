@@ -66,21 +66,21 @@ namespace Arnis.Core.Trackers
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine(ex.Message);
+                            ConsoleEx.Error(ex.Message);
                         }
 
                     });
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    ConsoleEx.Error(ex.Message);
                 }
             });
 
             return stackReport;
         }
 
-        //thanks @granadacoder for this very cool snippet
+        //thanks @granadacoder where i based the strategy to extract assembly references
         //https://granadacoder.wordpress.com/2012/10/11/how-to-find-references-in-a-c-project-file-csproj-using-linq-xml/
         private List<Dependency> ExtractReferencedAssemblies(string projectFile)
         {
@@ -88,20 +88,25 @@ namespace Arnis.Core.Trackers
 
             try
             {
-                XDocument xml = XDocument.Load(projectFile);
-                XNamespace ns = XNamespace.Get("http://schemas.microsoft.com/developer/msbuild/2003");
+                if (File.Exists(projectFile))
+                {
+                    XDocument xml = XDocument.Load(projectFile);
+                    XNamespace ns = XNamespace.Get("http://schemas.microsoft.com/developer/msbuild/2003");
 
-                var targetFrameworkVersion =
-                    (from l in xml.Descendants(ns + "PropertyGroup")
-                     from i in l.Elements(ns + "TargetFrameworkVersion")
-                     select new
-                     {
-                         x = i.Value
-                     }).First().x.ToString();
+                    var targetFrameworkVersion =
+                        (from l in xml.Descendants(ns + "PropertyGroup")
+                             from i in l.Elements(ns + "TargetFrameworkVersion")
+                             select new
+                             {
+                                 targetFrameworkVersion = i.Value
+                             }
+                        ).FirstOrDefault()?
+                        .targetFrameworkVersion
+                        .Replace("v",string.Empty);
 
-                var rawRefences = 
-                    from l in xml.Descendants(ns + "ItemGroup")
-                        from i in l.Elements(ns + "Reference")
+                    var rawRefences =
+                        from l in xml.Descendants(ns + "ItemGroup")
+                            from i in l.Elements(ns + "Reference")
                             select new
                             {
                                 ProjectFile = projectFile,
@@ -110,14 +115,26 @@ namespace Arnis.Core.Trackers
                                 Location = (i.Element(ns + "HintPath") == null) ? string.Empty : Path.GetFullPath(Path.Combine(Path.GetDirectoryName(projectFile), i.Element(ns + "HintPath").Value))
                             };
 
-                dependecies.AddRange(from v in rawRefences
-                    let referenceInfo = v.Reference.Split(',').ToList()
-                    let referenceName = referenceInfo[0]
-                    let versionInfo = referenceInfo.Count > 1 ? (referenceInfo[1].Contains("Version") ? referenceInfo[1].Split('=')[1] : "<Missing>") : targetFrameworkVersion
-                                     select new Dependency
-                    {
-                        Name = referenceName, Version = versionInfo, Location = v.Location
-                    });
+                    dependecies.AddRange(from v in rawRefences
+                                         let referenceInfo = v.Reference.Split(',').ToList()
+                                             let referenceName = referenceInfo[0]
+                                                 let versionInfo = referenceInfo.Count > 1 ? 
+                                                    (referenceInfo[1].Contains("Version") ? 
+                                                        referenceInfo[1].Split('=')[1] : 
+                                                        "<Missing>") : 
+                                                    targetFrameworkVersion
+                                                 select new Dependency
+                                                 {
+                                                     Name = referenceName,
+                                                     Version = versionInfo,
+                                                     Location = v.Location
+                                                 }
+                                         );
+                }
+                else
+                {
+                    ConsoleEx.Warn($"Missing file: {projectFile}");
+                }
             }
             catch (Exception ex)
             {

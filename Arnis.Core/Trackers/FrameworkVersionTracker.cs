@@ -59,36 +59,46 @@ namespace Arnis.Core.Trackers
                                 projectFile = Path.GetFullPath(p);
                             }
 
-                            var xml = XDocument.Load(projectFile);
-                            var ns = XNamespace.Get("http://schemas.microsoft.com/developer/msbuild/2003");
-
-                            var targetFrameworkVersion =
-                                (from l in xml.Descendants(ns + "PropertyGroup")
-                                 from i in l.Elements(ns + "TargetFrameworkVersion")
-                                 select new
-                                 {
-                                     x = i.Value
-                                 }).First().x.ToString();
-
-                            var projectDependencies = new Dependency
+                            if (File.Exists(projectFile))
                             {
-                                Name = ".NetFramework",
-                                Version = targetFrameworkVersion,
-                                Location = ""
-                            };
+                                var xml = XDocument.Load(projectFile);
+                                var ns = XNamespace.Get("http://schemas.microsoft.com/developer/msbuild/2003");
 
-                            project.Dependencies.Add(projectDependencies);
+                                var targetFrameworkVersion =
+                                    (from l in xml.Descendants(ns + "PropertyGroup")
+                                         from i in l.Elements(ns + "TargetFrameworkVersion")
+                                         select new
+                                         {
+                                             targetFrameworkVersion = i.Value
+                                         }
+                                     ).FirstOrDefault()?
+                                    .targetFrameworkVersion.ToString()
+                                    .Replace("v",string.Empty);
+
+                                var projectDependencies = new Dependency
+                                {
+                                    Name = ".NetFramework",
+                                    Version = targetFrameworkVersion,
+                                    Location = ""
+                                };
+
+                                project.Dependencies.Add(projectDependencies);
+                            }
+                            else
+                            {
+                                ConsoleEx.Warn($"Missing file: {projectFile}");
+                            }
                         }
                         catch (Exception ex)
                         {
-                            ConsoleEx.Error("ERROR: " + ex.Message);
+                            ConsoleEx.Error(ex.Message);
                         }
 
                     });
                 }
                 catch (Exception ex)
                 {
-                    ConsoleEx.Error("ERROR: " + ex.Message);
+                    ConsoleEx.Error(ex.Message);
                 }
             });
 
