@@ -55,9 +55,8 @@ Save the report into CSV file
 ![](https://rdagumampan.files.wordpress.com/2016/02/arnisresult.png)
 
 ####Disclaimer
-Arnis.NET does not guarantee 100% reliability. This is not a runtime dependency tracer. For more sophisticated runtime analysis, consider [Dependency Walker](http://www.dependencywalker.com/), [ILSPy](https://github.com/icsharpcode/ILSpy), [NDepend](http://www.ndepend.com/) or [Reflector](http://www.red-gate.com/products/dotnet-development/reflector/) tools.
+Arnis.NET is still in alpha stage and I cannot guarantee 100% reliability. 
+This is not a runtime dependency tracer. For more sophisticated runtime analysis, consider [Dependency Walker](http://www.dependencywalker.com/), [ILSPy](https://github.com/icsharpcode/ILSpy), [NDepend](http://www.ndepend.com/) or [Reflector](http://www.red-gate.com/products/dotnet-development/reflector/) tools.
 
 ####Future
-- support tracking web projects dependencies
-- a sink targetting a Web API in azure and deploy simple site to view the full dependency report
-- a webui to visualize dependency tree
+- support tracking node-style projects dependencies
