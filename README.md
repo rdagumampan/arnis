@@ -1,7 +1,7 @@
 ####Arnis 
 **Arnis.NET** is a no-brainer dependency tracker for .NET applications using elementary parsing algorithm. 
 
-![Download v0.1-alpha](https://github.com/rdagumampan/arnis/releases/download/v0.1-alpha/arnis.v0.1-alpha.zip)
+[Download v0.1-alpha](https://github.com/rdagumampan/arnis/releases/download/v0.1-alpha/arnis.v0.1-alpha.zip)
 
 ![](https://ci.appveyor.com/api/projects/status/github/rdagumampan/arnis?branch=master&svg=true)
 
