@@ -1,0 +1,20 @@
+{
+    "version": "0.0.2-*",
+    "description": "Azure DocumentDB documents for use by Arnis.NET dependency tracker",
+    "authors": [ "rdagumampan" ],
+    "tags": [ "arnis" ],
+    "projectUrl": "https://github.com/rdagumampan/arnis",
+    "licenseUrl": "",
+
+    "dependencies": {
+        "System.Linq": "4.0.0-beta-23109",
+        "System.Threading": "4.0.10-beta-23109",
+        "System.Runtime": "4.0.10-beta-23109",
+        "Microsoft.CSharp": "4.0.0-beta-23109",
+        "Newtonsoft.Json": "9.0.1"
+    },
+
+    "frameworks": {
+        "dnx451": { }
+    }
+}
