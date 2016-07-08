@@ -16,7 +16,7 @@ namespace Arnis.Sinks
             var request = new RestRequest(@"api/accounts", Method.POST);
             request.AddJsonBody(new
             {
-                userName = emailAddress
+                email = emailAddress
             });
             request.RequestFormat = DataFormat.Json;
 
