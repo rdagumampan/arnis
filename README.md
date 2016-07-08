@@ -1,13 +1,15 @@
 ####Arnis 
 **Arnis.NET** is a no-brainer dependency tracker for .NET applications using elementary parsing algorithm. 
 
+![Download v0.1-alpha](https://github.com/rdagumampan/arnis/releases/download/v0.1-alpha/arnis.v0.1-alpha.zip)
+
 ![](https://ci.appveyor.com/api/projects/status/github/rdagumampan/arnis?branch=master&svg=true)
 
 At the moment, you can:
-- track applications built on Visual Studio from 2001 to 2015.
-- track target framework versions
-- track referenced assemblies from nuget packages and GAC/Referenced Assesmblies folder.
-- extensible to support new trackers and sinks.
+  - track applications built on Visual Studio from 2001 to 2015.
+  - track target framework versions
+  - track referenced assemblies from nuget packages and GAC/Referenced Assesmblies folder.
+  - extensible to support new trackers and sinks.
 
 By consistently monitoring the technology stack in our application portfolio, we can better plan for component upgrades, monitor 3rd party usage, consolidate component versions, or strategize decommisioning of projects and tools.
 
