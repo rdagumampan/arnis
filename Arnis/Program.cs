@@ -17,7 +17,7 @@ namespace Arnis
 
         //example 1: publish into web sink
         //>arnis /web /r /u:email@website.com
-        //>arnis /web /apk:"XXXX-XXXX" /ws:"c:\github\arnis"
+        //>arnis /web /apk:"XXXX-XXXX" /ws:"c:\github\arnis" /wsn="arnis"
 
         static void Main(string[] args)
         {
@@ -68,7 +68,7 @@ namespace Arnis
                         }
                     }
 
-                    //capture /web /apk /ws
+                    //capture /web /apk /ws /wsn
                     var slashApkExist = settings.ContainsKey("apk");
                     if (slashApkExist)
                     {
@@ -81,17 +81,23 @@ namespace Arnis
                             throw new ArgumentException("Missing parameter", "ws");
                         }
 
+                        //validate working folder /wsn is required parameter
+                        string slashWsn = settings.SingleOrDefault(s => s.Key == "wsn").Value;
+                        if (null == slashWsn)
+                        {
+                            throw new ArgumentException("Missing parameter", "wsn");
+                        }
+
                         //run all trackers, at this point we have all the dependencies
                         var trackerResult = TrackDependencies(slashWs, skipList);
 
                         //create the workspace details
-                        string worspaceName = new DirectoryInfo(slashWs.TrimEnd(Path.DirectorySeparatorChar)).Name;
                         var workspace = new Workspace
                         {
-                            ApiKey = apiKey,
-                            Name = worspaceName,
+                            Name = slashWsn,
                             Solutions = trackerResult.Solutions,
-                            Logs = trackerResult.Logs
+                            Logs = trackerResult.Logs,
+                            ApiKey = apiKey
                         };
 
                         var webSink = new WebSink();

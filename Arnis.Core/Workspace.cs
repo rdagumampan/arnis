@@ -13,4 +13,10 @@ namespace Arnis.Core
         public List<Solution> Solutions { get; set; }
         public List<string> Logs { get; set; }
     }
+
+    public enum Source {
+        GAC,
+        NUGET,
+        NA
+    }
 }

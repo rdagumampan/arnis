@@ -5,11 +5,8 @@ namespace Arnis.Documents
 {
     public abstract class DependencyInfo: DocumentBase
     {
-        [JsonProperty("dependencyId")]
-        public string DependencyId { get; set; }
-
-        [JsonProperty("version")]
-        public VersionInfo Version { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
 
         [JsonProperty("title")]
         public string Title { get; set; }
@@ -34,6 +31,9 @@ namespace Arnis.Documents
 
         [JsonProperty("tags")]
         public List<string> Tags { get; set; }
+
+        [JsonProperty("version")]
+        public VersionInfo Version { get; set; }
 
         [JsonProperty("dependencies")]
         public List<DependencyInfo> Dependencies { get; } = new List<DependencyInfo>();
