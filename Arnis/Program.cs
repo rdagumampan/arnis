@@ -58,10 +58,10 @@ namespace Arnis
                             if (null != registration)
                             {
                                 string response =
-                                      $"{Environment.NewLine}API Key: {registration.ApiKey}"
-                                    + $"{Environment.NewLine}Workspace: {registration.Workspace}"
-                                    + $"{Environment.NewLine}Location: {registration.WorkspaceUri}"
-                                    + $"{Environment.NewLine}Location: {registration.AccountUri}";
+                                      $"{Environment.NewLine}   Api Key: {registration.ApiKey}"
+                                    + $"{Environment.NewLine}   Workspace: {registration.Workspace}"
+                                    + $"{Environment.NewLine}   Workspace Uri: {registration.WorkspaceUri}"
+                                    + $"{Environment.NewLine}   Account Uri: {registration.AccountUri}";
 
                                 ConsoleEx.Ok($"Done! Please keep your API key secret.{response}");
                             }
