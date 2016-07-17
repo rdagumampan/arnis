@@ -7,10 +7,7 @@ namespace Arnis.Documents
         [JsonProperty("name")]
         public string Name { get; set; }
 
-        [JsonProperty("version")]
-        public string Version { get; set; }
-
         [JsonProperty("hits")]
-        public int Hit { get; set; }
+        public int Hits { get; set; }
     }
 }

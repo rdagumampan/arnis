@@ -5,16 +5,16 @@ namespace Arnis.Documents
 {
     public class WorkspaceHit : DocumentBase
     {
-        [JsonProperty("workspaceId")]
-        public string WorkspaceId { get; set; }
+        [JsonProperty("account")]
+        public string Account { get; set; }
+
+        [JsonProperty("workspace")]
+        public string Workspace { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
 
-        [JsonProperty("version")]
-        public string Version { get; set; }
-
         [JsonProperty("hits")]
-        public int Hit { get; set; }
+        public int Hits { get; set; }
     }
 }
